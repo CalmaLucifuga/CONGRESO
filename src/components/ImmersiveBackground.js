@@ -1,9 +1,9 @@
 import { suscribirScroll } from "../utils/scrollEngine.js";
 
 // =========================================================
-// CONFIGURACIÓN DE TUS DOS IMÁGENES
+// CONFIGURACIÓN DE IMÁGENES
 // =========================================================
-const RUTA_IMAGEN_BASE = "/fondos/cme.jpg";
+const RUTA_IMAGEN_BASE = "/fondos/textura-base.jpg";
 const RUTA_IMAGEN_MAREA = "/fondos/24000001-large.png";
 
 const VERTEX_SHADER_SRC = `
@@ -31,44 +31,54 @@ const FRAGMENT_SHADER_SRC = `
   uniform vec2 u_tex_base_size;
   uniform vec2 u_tex_liquid_size;
 
-  vec2 calcularUV(vec2 uv, vec2 s, vec2 i) {
-    float rs = s.x / s.y;
-    float ri = i.x / i.y;
-    vec2 newSize = rs < ri ? vec2(i.x * s.y / i.y, s.y) : vec2(s.x, i.y * s.x / i.x);
-    vec2 offset = (rs < ri ? vec2((newSize.x - s.x) / 2.0, 0.0) : vec2(0.0, (newSize.y - s.y) / 2.0)) / newSize;
-    vec2 uvBase = uv * s / newSize + offset;
-    return (uvBase - 0.5) * 0.88 + 0.5;
+  // =========================================================
+  // ALGORITMO COVER UNIVERSAL (PC Y MÓVIL VERTICAL)
+  // =========================================================
+  vec2 getCoverUV(vec2 uv, vec2 screenRes, vec2 texRes) {
+    vec2 s = max(screenRes, vec2(1.0, 1.0));
+    vec2 i = max(texRes, vec2(1.0, 1.0));
+
+    float rs = s.x / s.y; // Proporción de la pantalla
+    float ri = i.x / i.y; // Proporción de la imagen
+
+    vec2 uvCover = uv;
+    if (rs < ri) {
+      // PANTALLA VERTICAL (SMARTPHONE): Escala horizontal centrada
+      float factor = rs / ri;
+      uvCover.x = (uv.x - 0.5) * factor + 0.5;
+    } else {
+      // PANTALLA HORIZONTAL (PC / ESCRITORIO): Escala vertical centrada
+      float factor = ri / rs;
+      uvCover.y = (uv.y - 0.5) * factor + 0.5;
+    }
+
+    // Zoom de seguridad del 12% para absorber ondulaciones
+    uvCover = (uvCover - 0.5) * 0.88 + 0.5;
+
+    // CLAMPING ESTRICTO: NUNCA permite salir de [0, 1] (Elimina líneas estiradas al 100%)
+    return clamp(uvCover, 0.002, 0.998);
   }
 
   void main() {
     vec2 uv = v_uv;
 
-    vec2 uvBase = calcularUV(uv, u_resolution, u_tex_base_size);
-    vec2 uvLiquid = calcularUV(uv, u_resolution, u_tex_liquid_size);
+    // UVs calculadas con el algoritmo universal
+    vec2 uvBase = getCoverUV(uv, u_resolution, u_tex_base_size);
+    vec2 uvLiquid = getCoverUV(uv, u_resolution, u_tex_liquid_size);
 
-    uvBase.y += (u_scroll_progress - 0.5) * 0.10;
-    uvLiquid.y += (u_scroll_progress - 0.5) * 0.14;
+    // Parallax vertical seguro dentro de los márgenes clamp
+    uvBase.y = clamp(uvBase.y + (u_scroll_progress - 0.5) * 0.08, 0.002, 0.998);
+    uvLiquid.y = clamp(uvLiquid.y + (u_scroll_progress - 0.5) * 0.10, 0.002, 0.998);
 
-    // 1. FONDO A (BASE) Y AVANCE DEL TELON NEGRO
-    vec4 texColorBase = texture2D(u_tex_base, uvBase);
-    vec3 colorBaseLuz = texColorBase.rgb;
-
-    float frenteTelon = u_telon_progreso * 1.25 - 0.10;
-    float distTelon = frenteTelon - uv.x;
-    float factorNegro = smoothstep(-0.03, 0.03, distTelon);
-    float sombraAvance = smoothstep(0.08, 0.0, abs(distTelon)) * (1.0 - factorNegro) * 0.65;
-
-    // Variable sin tilde corregida para la GPU:
-    vec3 colorNegroCarbon = vec3(0.047, 0.039, 0.031);
-
-    vec3 colorBaseConTelon = mix(colorBaseLuz - vec3(sombraAvance), colorNegroCarbon, factorNegro);
-
-    // 2. FONDO B (MAREA LIQUIDA)
+    // =========================================================
+    // 1. FÍSICA DE LA MAREA LÍQUIDA (DERECHA ➔ IZQUIERDA)
+    // =========================================================
     float tiempoMarea = u_time * 0.75;
     float vaivenMarea = pow(sin(tiempoMarea) * 0.5 + 0.5, 0.85);
 
+    // En móviles (pantallas estrechas), ajustamos la marea para que sea proporcional
     float limiteMaximo = u_limite_marea;
-    float anchoBaseAgua = (limiteMaximo - 0.05) * (0.84 + vaivenMarea * 0.16);
+    float anchoBaseAgua = (limiteMaximo - 0.04) * (0.84 + vaivenMarea * 0.16);
 
     float curvaOrilla = 
       sin(uv.y * 5.0 + tiempoMarea * 0.9) * 0.038 + 
@@ -77,26 +87,54 @@ const FRAGMENT_SHADER_SRC = `
 
     float anchoTotalAgua = clamp(anchoBaseAgua + curvaOrilla, 0.04, limiteMaximo);
 
+    // Posición de la orilla
     float xOrilla = 1.0 - anchoTotalAgua;
     float distOrilla = uv.x - xOrilla;
-    float factorAgua = smoothstep(-0.006, 0.006, distOrilla);
+    float factorAgua = smoothstep(-0.008, 0.008, distOrilla);
 
+    // =========================================================
+    // 2. FONDO A (BASE) Y AVANCE DEL TELÓN NEGRO CONTROLADO
+    // =========================================================
+    vec4 texColorBase = texture2D(u_tex_base, uvBase);
+    vec3 colorBaseLuz = texColorBase.rgb;
+
+    // CORRECCIÓN CLAVE: El telón negro avanza desde la izquierda,
+    // pero su límite MÁXIMO es exactamente donde empieza el agua (xOrilla).
+    // Jamás invade el mar de la derecha.
+    float frenteTelon = u_telon_progreso * (xOrilla + 0.06) - 0.06;
+    float distTelon = frenteTelon - uv.x;
+    float factorNegro = smoothstep(-0.03, 0.03, distTelon);
+    
+    // Borde de penumbra suave
+    float sombraAvance = smoothstep(0.08, 0.0, abs(distTelon)) * (1.0 - factorNegro) * 0.60;
+    vec3 colorNegroCarbon = vec3(0.047, 0.039, 0.031);
+
+    vec3 colorBaseConTelon = mix(colorBaseLuz - vec3(sombraAvance), colorNegroCarbon, factorNegro);
+
+    // =========================================================
+    // 3. FONDO B (MAREA LÍQUIDA VIVA)
+    // =========================================================
     vec2 refraccionLiquida = vec2(
-      sin(uv.y * 22.0 + u_time * 1.8) * 0.005,
-      cos(uv.x * 26.0 - u_time * 2.2) * 0.004
+      sin(uv.y * 20.0 + u_time * 1.8) * 0.004,
+      cos(uv.x * 24.0 - u_time * 2.2) * 0.003
     );
-    vec4 texColorLiquid = texture2D(u_tex_liquid, uvLiquid + refraccionLiquida);
+    vec2 uvLiquidRefract = clamp(uvLiquid + refraccionLiquida, 0.002, 0.998);
+    vec4 texColorLiquid = texture2D(u_tex_liquid, uvLiquidRefract);
     vec3 colorLiquidFinal = texColorLiquid.rgb;
 
+    // Espuma en la rompiente
     float intensidadOla = smoothstep(0.40, 0.85, limiteMaximo);
     float grosorEspuma = mix(0.014, 0.026, intensidadOla);
     float bordeOrilla = smoothstep(grosorEspuma, 0.0, abs(distOrilla)) * mix(0.42, 0.75, intensidadOla);
     vec3 colorEspumaSuave = vec3(1.0, 0.99, 0.96);
 
-    // 3. COMPOSICION: EL AGUA SE DIBUJA POR ENCIMA DEL TELON NEGRO
+    // =========================================================
+    // 4. COMPOSICIÓN FINAL
+    // =========================================================
     vec3 colorComposicion = mix(colorBaseConTelon, colorLiquidFinal, factorAgua);
     vec3 colorFinal = mix(colorComposicion, colorEspumaSuave, bordeOrilla * factorAgua);
 
+    // Saturación viva de color
     float saturacion = 1.15;
     float luminancia = dot(colorFinal, vec3(0.299, 0.587, 0.114));
     colorFinal = mix(vec3(luminancia), colorFinal, saturacion);
@@ -151,22 +189,13 @@ export function iniciarFondoInmersivo() {
 
   const vertShader = compilarShader(gl.VERTEX_SHADER, VERTEX_SHADER_SRC);
   const fragShader = compilarShader(gl.FRAGMENT_SHADER, FRAGMENT_SHADER_SRC);
-
   if (!vertShader || !fragShader) return;
 
   const programa = gl.createProgram();
   gl.attachShader(programa, vertShader);
   gl.attachShader(programa, fragShader);
   gl.linkProgram(programa);
-
-  if (!gl.getProgramParameter(programa, gl.LINK_STATUS)) {
-    console.error(
-      "Error al enlazar programa WebGL:",
-      gl.getProgramInfoLog(programa),
-    );
-    return;
-  }
-
+  if (!gl.getProgramParameter(programa, gl.LINK_STATUS)) return;
   gl.useProgram(programa);
 
   const vertices = new Float32Array([
@@ -194,7 +223,6 @@ export function iniciarFondoInmersivo() {
   );
 
   function redimensionar() {
-    // Limitamos la resolución a 1.25x en móviles y 1.5x en PC para máxima fluidez
     const dpr = Math.min(
       window.devicePixelRatio || 1,
       window.innerWidth < 850 ? 1.25 : 1.5,
@@ -206,6 +234,10 @@ export function iniciarFondoInmersivo() {
   }
   window.addEventListener("resize", redimensionar);
   redimensionar();
+
+  // Inicialización de seguridad para evitar división por cero antes de cargar
+  gl.uniform2f(uTexBaseSizeLoc, 1920.0, 1080.0);
+  gl.uniform2f(uTexLiquidSizeLoc, 1920.0, 1080.0);
 
   function cargarTextura(unidad, url, fallbackUrl, uSamplerLoc, uSizeLoc) {
     const tex = gl.createTexture();
@@ -243,7 +275,6 @@ export function iniciarFondoInmersivo() {
     };
 
     img.onerror = () => {
-      // Si falló .png intenta con .jpg antes de ir al fallback web
       if (img.src.includes(".png")) {
         img.src = url.replace(".png", ".jpg");
       } else if (fallbackUrl && img.src !== fallbackUrl) {
@@ -279,7 +310,6 @@ export function iniciarFondoInmersivo() {
 
   function renderizar(tiempoActual) {
     const segundos = (tiempoActual - tiempoInicio) * 0.001;
-
     telonProgresoActual += (telonActivoMeta - telonProgresoActual) * 0.06;
 
     let limiteActual = 0.395;
