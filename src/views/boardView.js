@@ -19,47 +19,48 @@ export function inicializarPizarra() {
   // 1. PINTAR BARRA LATERAL (Documentos Arrastrables)
   // -------------------------------------------------------------
   function pintarListaLateral() {
-    if (!listaArrastrables) {
-      console.error(
-        "Error: No se encontró el elemento #lista-arrastrables en index.html",
-      );
-      return;
-    }
-
-    if (!datos || datos.length === 0) {
-      listaArrastrables.innerHTML = `
-        <p style="font-size: 0.85rem; color: #ef4444;">
-          No se encontraron proyectos en proyectos.json
-        </p>
-      `;
-      return;
-    }
+    if (!listaArrastrables) return;
 
     listaArrastrables.innerHTML = datos
       .map(
         (item) => `
-      <div 
-        class="item-arrastrable" 
-        draggable="true" 
-        data-id="${item.id}"
-      >
-        <h4>${item.titulo || "Sin título"}</h4>
-        <span class="badge-mini">${item.categoria || "General"}</span>
+      <div class="item-arrastrable" draggable="true" data-id="${item.id}">
+        <div class="info-arrastrable">
+          <h4>${item.titulo || "Sin título"}</h4>
+          <span class="badge-mini">${item.categoria || "General"}</span>
+        </div>
+        <!-- Botón táctil para móviles (añadir con 1 toque) -->
+        <button class="btn-toque-anadir" data-id="${item.id}" title="Añadir a la mesa">+</button>
       </div>
     `,
       )
       .join("");
 
-    // Activar eventos de inicio y fin de arrastre
+    // Evento de toque directo para móviles
+    listaArrastrables.querySelectorAll(".btn-toque-anadir").forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const id = btn.dataset.id;
+        const doc = datos.find((d) => String(d.id) === String(id));
+        if (
+          doc &&
+          !documentosEnPizarra.some((d) => String(d.id) === String(doc.id))
+        ) {
+          documentosEnPizarra.push(doc);
+          agregarDocumentoAMesa(doc);
+        }
+      });
+    });
+
+    // Mantenemos el Drag & Drop intacto para PC
     listaArrastrables.querySelectorAll(".item-arrastrable").forEach((ficha) => {
       ficha.addEventListener("dragstart", (e) => {
         e.dataTransfer.setData("text/plain", ficha.dataset.id);
         ficha.classList.add("arrastrando");
       });
-
-      ficha.addEventListener("dragend", () => {
-        ficha.classList.remove("arrastrando");
-      });
+      ficha.addEventListener("dragend", () =>
+        ficha.classList.remove("arrastrando"),
+      );
     });
   }
 

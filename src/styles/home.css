@@ -583,3 +583,35 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* =========================================================
+   ADAPTACIÓN MÓVIL: PORTADA Y TIPOGRAFÍA MONUMENTAL
+   ========================================================= */
+@media (max-width: 850px) {
+  /* Título CONGRESO escalado para pantallas estrechas */
+  .titulo-monumental-portada {
+    font-size: clamp(2.4rem, 13vw, 4.2rem);
+    letter-spacing: 0.10em;
+    text-indent: 0.10em;
+    margin-bottom: 2rem;
+  }
+
+  /* Título ACTUALIDAD */
+  .titulo-actualidad-interactivo {
+    font-size: clamp(2.2rem, 11vw, 3.6rem);
+    letter-spacing: 0.10em;
+    text-indent: 0.10em;
+  }
+
+  /* Colapso de atajos a 1 sola columna */
+  .banner-atajos {
+    grid-template-columns: 1fr;
+  }
+
+  /* Círculos flotantes respetando la barra de gestos del móvil */
+  .nav-nodos-home {
+    bottom: max(1.5rem, env(safe-area-inset-bottom, 1.5rem));
+    padding: 0.4rem 0.8rem;
+    gap: 1rem;
+  }
+}

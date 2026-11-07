@@ -314,3 +314,105 @@
   padding: 1.5rem;
   overflow-y: auto;
 }
+
+/* Adaptación real de tu Pizarra para móviles */
+@media (max-width: 850px) {
+  .contenedor-pizarra {
+    grid-template-columns: 1fr; /* Pasa de 2 columnas a 1 sola */
+    min-height: auto;
+  }
+
+  .panel-lateral-pizarra {
+    max-height: 280px;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Los visores de PDF en móvil se reemplazan por aviso táctil */
+  .cuerpo-panel {
+    height: 380px;
+  }
+}
+
+/* =========================================================
+   ADAPTACIÓN MÓVIL DE LA PIZARRA Y ACCESO TÁCTIL
+   ========================================================= */
+
+.item-arrastrable {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-toque-anadir {
+  background: #2563eb;
+  color: white;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+}
+
+@media (max-width: 850px) {
+  /* La pizarra pasa de 2 columnas a 1 sola columna vertical */
+  .contenedor-pizarra {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .panel-lateral-pizarra {
+    max-height: 260px;
+  }
+
+  .zona-suelta,
+  .zona-suelta[data-layout="horizontal"],
+  .zona-suelta[data-layout="grid"] {
+    grid-template-columns: 1fr; /* Cada documento ocupa el 100% en móvil */
+  }
+
+  .cuerpo-panel {
+    height: 420px;
+  }
+}
+
+/* Tarjeta de visualización en móvil para PDFs */
+.visor-movil-pdf {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: #1e293b;
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  gap: 0.75rem;
+}
+
+.icono-doc-movil {
+  font-size: 2.5rem;
+}
+
+.subtexto-doc-movil {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  max-width: 280px;
+}
+
+.btn-abrir-pdf-movil {
+  margin-top: 0.5rem;
+  background: #2563eb;
+  color: white;
+  text-decoration: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.9rem;
+}

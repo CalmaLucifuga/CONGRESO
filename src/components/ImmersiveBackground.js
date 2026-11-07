@@ -194,8 +194,13 @@ export function iniciarFondoInmersivo() {
   );
 
   function redimensionar() {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    // Limitamos la resolución a 1.25x en móviles y 1.5x en PC para máxima fluidez
+    const dpr = Math.min(
+      window.devicePixelRatio || 1,
+      window.innerWidth < 850 ? 1.25 : 1.5,
+    );
+    canvas.width = Math.floor(window.innerWidth * dpr);
+    canvas.height = Math.floor(window.innerHeight * dpr);
     gl.viewport(0, 0, canvas.width, canvas.height);
     gl.uniform2f(uResLoc, canvas.width, canvas.height);
   }

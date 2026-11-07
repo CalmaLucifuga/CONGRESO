@@ -1,6 +1,7 @@
 /**
- * Visor interactivo de PDF utilizando el motor nativo del navegador.
- * Cero librerías externas pesadas y acelerado por hardware.
+ * Visor de PDF con detección móvil:
+ * En PC incrusta el iframe nativo interactivo.
+ * En Móviles ofrece apertura directa sin bloqueos táctiles.
  */
 export function renderPdfViewer(doc) {
   if (!doc.enlace) {
@@ -11,9 +12,21 @@ export function renderPdfViewer(doc) {
     `;
   }
 
-  // Parámetros de la URL para optimizar la vista dentro del panel:
-  // - toolbar=1: mantiene herramientas de zoom, búsqueda y páginas
-  // - navpanes=0: oculta el panel lateral del visor por defecto para ganar ancho de lectura
+  const esMovil = window.innerWidth < 850;
+
+  if (esMovil) {
+    return `
+      <div class="visor-movil-pdf">
+        <span class="icono-doc-movil">📄</span>
+        <h4>Documento PDF</h4>
+        <p class="subtexto-doc-movil">${doc.titulo}</p>
+        <a href="${doc.enlace}" target="_blank" rel="noopener" class="btn-abrir-pdf-movil">
+          Abrir en Visor Nativo ↗
+        </a>
+      </div>
+    `;
+  }
+
   const urlOptimizada = `${doc.enlace}#toolbar=1&navpanes=0`;
 
   return `
@@ -23,11 +36,7 @@ export function renderPdfViewer(doc) {
         title="Documento: ${doc.titulo}"
         class="iframe-pdf"
         loading="lazy"
-      >
-        <p>Tu navegador no soporta la previsualización integrada. 
-          <a href="${doc.enlace}" target="_blank" rel="noopener">Descargar PDF</a>.
-        </p>
-      </iframe>
+      ></iframe>
     </div>
   `;
 }
