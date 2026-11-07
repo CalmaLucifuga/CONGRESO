@@ -140,7 +140,7 @@
   font-size: 1.40rem;
   font-weight: 900;
   letter-spacing: 0.25em;
-  color: #919090;
+  color: #f40101;
   cursor: pointer;
   transition: color 0.2s ease;
   text-shadow: 3px 3px 0px #333333 !important;  
@@ -246,7 +246,7 @@
 
 .titulo-monumental-portada:hover ~ .indicador-ingreso,
 .indicador-ingreso:hover {
-  color: #f40101;
+  color: #4f4f4f;
 }
 
 .flecha-ingreso {
