@@ -1,0 +1,316 @@
+/* Estructura general de la Pizarra */
+.contenedor-pizarra {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 1.5rem;
+  margin-top: 1rem;
+  min-height: 550px;
+}
+
+.contenedor-pizarra.panel-oculto {
+  grid-template-columns: 1fr;
+}
+
+.contenedor-pizarra.panel-oculto .panel-lateral-pizarra {
+  display: none;
+}
+
+/* Panel Lateral de Documentos */
+.panel-lateral-pizarra {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.subtexto-pizarra {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 1rem;
+}
+
+.lista-arrastrables {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  overflow-y: auto;
+  max-height: 500px;
+}
+
+.item-arrastrable {
+  background: #f9fafb;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.75rem;
+  cursor: grab;
+  transition: transform 0.15s ease, border-color 0.15s ease;
+  user-select: none;
+}
+
+.item-arrastrable:active {
+  cursor: grabbing;
+}
+
+.item-arrastrable.arrastrando {
+  opacity: 0.4;
+  transform: scale(0.95);
+}
+
+.item-arrastrable h4 {
+  font-size: 0.9rem;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+}
+
+.item-arrastrable .badge-mini {
+  font-size: 0.7rem;
+  background: #e0e7ff;
+  color: #4338ca;
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+}
+
+/* Mesa de Trabajo y Herramientas */
+.area-trabajo {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cabecera-area {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.herramientas-mesa {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.grupo-split {
+  display: flex;
+  background: #e2e8f0;
+  padding: 2px;
+  border-radius: 6px;
+  gap: 2px;
+}
+
+.btn-split {
+  background: transparent;
+  border: none;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #475569;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+}
+
+.btn-split:hover {
+  color: #0f172a;
+}
+
+.btn-split.activo {
+  background: #ffffff;
+  color: #2563eb;
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.btn-secundario {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.btn-secundario:hover {
+  background: #f3f4f6;
+}
+
+/* Zona de Suelta (Dropzone) y Split Views */
+.zona-suelta,
+.zona-suelta[data-layout="horizontal"] {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+  gap: 1.5rem;
+  min-height: 600px;
+  background: #ffffff;
+  border: 2px dashed #cbd5e1;
+  border-radius: 12px;
+  padding: 1.25rem;
+  align-items: start;
+}
+
+.zona-suelta[data-layout="vertical"] {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.zona-suelta[data-layout="vertical"] .panel-documento {
+  width: 100%;
+}
+
+.zona-suelta[data-layout="grid"] {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.zona-suelta.dragover-activo {
+  background-color: #eff6ff;
+  border-color: #2563eb;
+  border-style: solid;
+}
+
+.mensaje-zona-vacia {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #9ca3af;
+  margin: auto;
+  pointer-events: none;
+}
+
+.icono-drop {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Panel de Documento con Visor Integrado */
+.panel-documento {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.cabecera-panel {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  background: #f8fafc;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.info-doc h4 {
+  font-size: 0.95rem;
+  color: #1e293b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 0.2rem;
+}
+
+.acciones-panel {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.btn-accion {
+  background: transparent;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.85rem;
+  color: #4b5563;
+  text-decoration: none;
+}
+
+.btn-accion:hover {
+  background: #e2e8f0;
+  color: #111827;
+}
+
+.btn-cerrar:hover {
+  background: #fee2e2;
+  color: #ef4444;
+  border-color: #fca5a5;
+}
+
+.cuerpo-panel {
+  position: relative;
+  height: 520px;
+  min-height: 350px;
+  max-height: 85vh;
+  resize: vertical;
+  overflow: hidden;
+  background: #525659;
+}
+
+.contenedor-visor-pdf,
+.iframe-pdf {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+.pie-panel {
+  padding: 0.5rem 1rem;
+  background: #f8fafc;
+  border-top: 1px solid #e2e8f0;
+  color: #64748b;
+  font-size: 0.75rem;
+}
+
+.panel-documento.panel-minimizado .cuerpo-panel,
+.panel-documento.panel-minimizado .pie-panel {
+  display: none;
+}
+
+.panel-metricas {
+  background: #1e293b;
+  color: #ffffff;
+  padding: 1.25rem;
+  border-radius: 10px;
+}
+
+.visor-fallback,
+.visor-vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  background: #f9fafb;
+  color: #6b7280;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+.btn-fallback {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: #2563eb;
+  color: white;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+
+:fullscreen {
+  background: #f4f6f8;
+  padding: 1.5rem;
+  overflow-y: auto;
+}

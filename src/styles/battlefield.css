@@ -1,0 +1,228 @@
+/* Lienzo WebGL al fondo de todo */
+#canvas-inmersivo {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -2;
+  pointer-events: none;
+}
+
+/* Escenario Artístico */
+#escenario-artistico {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.escenario-viento-activo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+  perspective: 1000px;
+}
+
+/* Corrientes vectoriales */
+.svg-corrientes-viento {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.75;
+}
+
+.linea-viento {
+  stroke-dasharray: 400 800;
+  animation: rafagaAireFlujo linear infinite;
+}
+
+.corriente-rapida-1 { animation-duration: 4.8s; animation-delay: -1.2s; }
+.corriente-rapida-2 { animation-duration: 3.6s; animation-delay: -2.8s; }
+.corriente-rapida-3 { animation-duration: 5.5s; animation-delay: -0.5s; }
+
+@keyframes rafagaAireFlujo {
+  0% { stroke-dashoffset: 1200; }
+  100% { stroke-dashoffset: -1200; }
+}
+
+/* Bloques de Humo Negro Optimizado (Sin filter: blur) */
+.capa-humo-polvora {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.resplandor-belico {
+  position: absolute;
+  bottom: -15%;
+  right: -10%;
+  width: 55vw;
+  height: 65vh;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at center,
+    rgba(225, 65, 15, 0.25) 0%,
+    rgba(165, 40, 10, 0.12) 40%,
+    rgba(70, 20, 10, 0.04) 65%,
+    transparent 85%
+  );
+  mix-blend-mode: color-dodge;
+  animation: pulsoFogonazo 7s ease-in-out infinite alternate;
+  will-change: opacity, transform;
+}
+
+@keyframes pulsoFogonazo {
+  0% { opacity: 0.55; transform: scale(0.95); }
+  35% { opacity: 0.85; transform: scale(1.04); }
+  65% { opacity: 0.40; transform: scale(0.94); }
+  100% { opacity: 0.70; transform: scale(1.02); }
+}
+
+/* El humo es naturalmente difuso gracias a las paradas suaves del gradiente radial */
+.nube-humo {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+  mix-blend-mode: multiply;
+  will-change: transform, opacity;
+}
+
+.nube-densa-1 {
+  width: 700px;
+  height: 460px;
+  background: radial-gradient(ellipse at 45% 45%, rgba(15, 10, 8, 0.78) 0%, rgba(32, 22, 18, 0.40) 45%, transparent 75%);
+  top: 10%;
+  right: -350px;
+  animation: derivaHumoDenso 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+.nube-densa-2 {
+  width: 820px;
+  height: 520px;
+  background: radial-gradient(ellipse at 50% 50%, rgba(22, 14, 10, 0.75) 0%, rgba(80, 35, 18, 0.35) 40%, transparent 75%);
+  top: 40%;
+  right: -400px;
+  animation: derivaHumoDenso 16s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: -5s;
+}
+
+.nube-densa-3 {
+  width: 650px;
+  height: 400px;
+  background: radial-gradient(ellipse at center, rgba(18, 12, 10, 0.80) 0%, rgba(35, 24, 18, 0.40) 45%, transparent 75%);
+  bottom: 0%;
+  right: -300px;
+  animation: derivaHumoDenso 14s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: -9s;
+}
+
+@keyframes derivaHumoDenso {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(0.8) rotate(0deg); }
+  25% { opacity: 0.95; }
+  70% { opacity: 0.70; }
+  100% { opacity: 0; transform: translate3d(calc(-100vw - 450px), -150px, 0) scale(1.4) rotate(-20deg); }
+}
+
+/* Lienzo de Chispas */
+#canvas-chispas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Cenizas y Fragmentos Optimizados */
+.capa-briznas-papel {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+}
+
+.brizna-pergamino {
+  position: absolute;
+  top: var(--top-inicial, 50%);
+  right: -120px;
+  left: auto;
+  transform-style: preserve-3d;
+  will-change: transform;
+  animation: vueloVendavalBelico var(--duracion-vuelo, 5s) linear infinite;
+  animation-delay: var(--retraso-vuelo, 0s);
+}
+
+.fragmento-papel {
+  position: relative;
+  display: block;
+  transform: scale(var(--escala-brizna, 1));
+  animation: voltereta3DCeniza 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite alternate;
+}
+
+.pagina-chamuscada .fragmento-papel {
+  width: 30px;
+  height: 18px;
+  background: radial-gradient(ellipse at 40% 45%, #c49e69 0%, #7d4d23 45%, #2c1206 75%, #0d0502 100%);
+  border: 1px solid #1a0a03;
+  border-radius: 2px 14px 3px 11px / 12px 2px 15px 1px;
+  box-shadow: 0 4px 10px rgba(10, 5, 2, 0.45);
+}
+
+.brasa-papel .fragmento-papel {
+  width: 15px;
+  height: 9px;
+  background: radial-gradient(circle at center, #ff4500 0%, #991b00 45%, #1f0500 90%);
+  border-radius: 4px 8px 3px 6px;
+  box-shadow: 0 0 6px rgba(255, 80, 0, 0.85);
+}
+
+.escama-ceniza .fragmento-papel {
+  width: 20px;
+  height: 11px;
+  background: radial-gradient(ellipse at 30% 30%, #382b24 0%, #1a120e 65%, #050302 100%);
+  border-radius: 1px 9px 2px 8px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
+  opacity: 0.85;
+}
+
+@keyframes vueloVendavalBelico {
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(calc(-100vw - 300px), -220px, 0); }
+}
+
+@keyframes voltereta3DCeniza {
+  0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+  50% { transform: rotateX(190deg) rotateY(55deg) rotateZ(45deg); }
+  100% { transform: rotateX(360deg) rotateY(110deg) rotateZ(-30deg); }
+}
+
+/* =========================================================
+   COMPORTAMIENTO DURANTE LA RÁFAGA DE TRANSICIÓN
+   ========================================================= */
+
+/* Capa de refuerzo temporal: entra a buena velocidad sin reiniciar la capa original */
+.capa-briznas-refuerzo .brizna-pergamino {
+  animation-duration: 2.8s !important;
+}
+
+/* El resplandor bélico del horizonte se intensifica con suavidad */
+.escenario-viento-activo.rafaga-transicion .resplandor-belico {
+  opacity: 0.95 !important;
+  transform: scale(1.12) !important;
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}

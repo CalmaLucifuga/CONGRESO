@@ -1,0 +1,585 @@
+/* =========================================================
+   ATAJOS CIRCULARES DEL HOME (CÍRCULOS ANÓNIMOS)
+   ========================================================= */
+
+.nav-nodos-home {
+  position: fixed;
+  bottom: 2.2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  z-index: 10;
+  padding: 0.5rem 1rem;
+  background: rgba(251, 246, 236, 0.65);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(140, 110, 80, 0.22);
+  border-radius: 30px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  user-select: none;
+}
+
+/* El círculo geométrico puro (sin nombre ni icono) */
+.nodo-circulo {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  border: 1.5px solid #786452;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.3, 1), 
+              background-color 0.25s ease, 
+              border-color 0.25s ease;
+}
+
+.nodo-circulo:hover {
+  transform: scale(1.3);
+  border-color: #1a120b;
+  background-color: rgba(120, 100, 82, 0.25);
+}
+
+/* Estado activo: el círculo se rellena de tinta negra sólida */
+.nodo-circulo.activo {
+  background-color: #1a120b;
+  border-color: #1a120b;
+  transform: scale(1.25);
+  box-shadow: 0 0 8px rgba(26, 18, 11, 0.3);
+}
+
+/* =========================================================
+   ESTACIÓN 0: PORTADA MONUMENTAL LIMPIA (#vista-portada)
+   ========================================================= */
+
+.pantalla-portada {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem 1rem;
+  user-select: none;
+}
+
+.portada-emblema-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.emblema-punto {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #fefcfc;
+  box-shadow: 0 0 10px rgba(185, 28, 28, 0.65);
+}
+
+.subtexto-institucional {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  color: #fefefe;
+  text-transform: uppercase;
+}
+
+/* TÍTULO MONUMENTAL INTERACTIVO */
+.titulo-monumental-portada {
+  font-family: 'Raleway', sans-serif;
+  font-size: clamp(4.5rem, 15vw, 10.5rem);
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+  text-transform: uppercase;
+  color: #ebeaea;
+  margin: 0 0 3rem 0;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.2, 0.4, 0.3, 1), color 0.3s ease, text-shadow 0.3s ease;
+  outline: none;
+}
+
+.sombra-monumental-portada {
+  font-family: 'Raleway', sans-serif;
+  font-size: clamp(4.5rem, 15vw, 10.5rem);
+  font-weight: 900;
+  line-height: 0.85;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+  text-transform: uppercase;
+  color: #0a0a0a;
+  margin: 0 0 3rem 0;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.2, 0.4, 0.3, 1), color 0.3s ease, text-shadow 0.3s ease;
+  outline: none;
+}
+
+/* Efecto al pasar el ratón: sutil relieve y tensión táctil */
+.titulo-monumental-portada:hover {
+  transform: scale(1.02);
+  color: #fdfdfd;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.titulo-monumental-portada:focus-visible {
+  outline: 2px dashed #b91c1c;
+  outline-offset: 12px;
+}
+
+/* Indicador de entrada */
+.indicador-ingreso {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.40rem;
+  font-weight: 900;
+  letter-spacing: 0.25em;
+  color: #919090;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  text-shadow: 3px 3px 0px #333333 !important;  
+}
+
+/* =========================================================
+   ACTO 2: PESTAÑA LIMPIA DE "ACTUALIDAD" (#vista-actualidad)
+   Diseñada para contrastar sobre el fondo negro exclusivo
+   ========================================================= */
+
+.pantalla-actualidad {
+  min-height: 85vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 3rem 1.5rem;
+  user-select: none;
+}
+
+.actualidad-emblema-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.bloque-tesis-actualidad {
+  max-width: 680px;
+  margin-bottom: 3.5rem;
+}
+
+.bloque-tesis-actualidad h2 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #f5f2eb; /* Blanco marfil luminoso sobre el negro */
+  letter-spacing: -0.01em;
+  margin-bottom: 1rem;
+}
+
+.parrafo-actualidad {
+  color: #c4b5a5;
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+/* El disparador monumental "ACTUALIDAD" */
+.bloque-trigger-actualidad {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.titulo-actualidad-interactivo {
+  font-family: 'Raleway', sans-serif;
+  font-size: clamp(3.2rem, 10vw, 6.5rem);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+  text-transform: uppercase;
+  color: #f5f2eb;
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.2, 0.4, 0.3, 1), 
+              color 0.3s ease, 
+              text-shadow 0.3s ease;
+  outline: none;
+}
+
+/* Efecto al pasar el ratón: destello cálido de fuego */
+.titulo-actualidad-interactivo:hover {
+  transform: scale(1.03);
+  color: #facc15; /* Oro ámbar incandescente */
+  text-shadow: 0 0 25px rgba(250, 204, 21, 0.45);
+}
+
+.titulo-actualidad-interactivo:focus-visible {
+  outline: 2px dashed #facc15;
+  outline-offset: 10px;
+}
+
+.indicador-ingreso-actualidad {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  color: #a89685;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.titulo-actualidad-interactivo:hover ~ .indicador-ingreso-actualidad,
+.indicador-ingreso-actualidad:hover {
+  color: #facc15;
+}
+
+.titulo-monumental-portada:hover ~ .indicador-ingreso,
+.indicador-ingreso:hover {
+  color: #f40101;
+}
+
+.flecha-ingreso {
+  font-size: 1.1rem;
+  color: #b91c1c;
+  transition: transform 0.2s ease;
+}
+
+.indicador-ingreso:hover .flecha-ingreso {
+  transform: translateX(4px);
+}
+
+/* =========================================================
+   ESTACIÓN 1: INICIO / DESPACHO (#vista-inicio)
+   ========================================================= */
+
+.seccion-inicio {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+/* Cabecera del Despacho adaptada para contrastar sobre el fondo negro */
+.despacho-cabecera {
+  margin-bottom: 0.5rem;
+}
+
+.despacho-badge {
+  display: inline-block;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  color: #ef4444; /* Rojo lacre brillante */
+  text-transform: uppercase;
+  margin-bottom: 0.5rem;
+}
+
+.despacho-cabecera h2 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #f5f2eb; /* Blanco marfil luminoso y nítido */
+  letter-spacing: -0.01em;
+  margin-bottom: 0.5rem;
+}
+
+.despacho-cabecera p {
+  color: #c4b5a5; /* Ceniza suave y perfectamente legible */
+  font-size: 1.05rem;
+  max-width: 650px;
+}
+
+/* Encabezados de categorías adaptados al fondo negro */
+.cabecera-categoria {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.sello-categoria {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  font-weight: 800;
+  color: #ef4444; /* Resplandor lacre */
+  display: inline-block;
+  margin-bottom: 0.4rem;
+}
+
+.cabecera-categoria h3 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.8rem;
+  color: #f5f2eb; /* Blanco marfil */
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.contador-categoria {
+  font-size: 0.85rem;
+  color: #a89685;
+  margin-top: 0.25rem;
+}
+
+.linea-categoria {
+  width: 70px;
+  height: 2px;
+  background: #c5b28a; /* Oro antiguo / bronce */
+  margin: 0.75rem auto 0;
+  border-radius: 2px;
+}
+
+/* Atajos situados en la parte superior */
+.banner-atajos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.atajo-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.atajo-icono {
+  font-size: 1.5rem;
+}
+
+.atajo-card h4 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.atajo-card p {
+  color: #64748b;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  flex-grow: 1;
+}
+
+.btn-atajo {
+  margin-top: 0.5rem;
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.btn-atajo:hover {
+  background: #1d4ed8;
+}
+
+.btn-atajo--secundario {
+  background: #0f172a;
+}
+
+.btn-atajo--secundario:hover {
+  background: #334155;
+}
+
+/* Bloques de Categorías */
+.contenedor-fondos {
+  display: flex;
+  flex-direction: column;
+  gap: 4.5rem;
+  margin: 1.5rem 0 5rem 0;
+}
+
+.bloque-categoria {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.cabecera-categoria {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.sello-categoria {
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  font-weight: 800;
+  color: #8c2d19;
+  display: inline-block;
+  margin-bottom: 0.4rem;
+}
+
+.cabecera-categoria h3 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.8rem;
+  color: #2b1f1d;
+  font-weight: 800;
+  text-transform: capitalize;
+}
+
+.contador-categoria {
+  font-size: 0.85rem;
+  color: #786452;
+  margin-top: 0.25rem;
+}
+
+.linea-categoria {
+  width: 70px;
+  height: 2px;
+  background: #c5b28a;
+  margin: 0.75rem auto 0;
+  border-radius: 2px;
+}
+
+.grid-documentos-inicio {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Tarjeta de Exhibición (ShowcaseCard) */
+.showcase-card {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background-color: #0f172a;
+  min-height: 260px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e2e8f0;
+}
+
+.showcase-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+}
+
+.showcase-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.showcase-media .contenedor-thumbnail {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: unset;
+}
+
+.showcase-media .img-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.showcase-card:hover .img-thumbnail {
+  transform: scale(1.05);
+}
+
+.showcase-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(15, 23, 42, 0.95) 0%,
+    rgba(15, 23, 42, 0.5) 45%,
+    rgba(15, 23, 42, 0.1) 100%
+  );
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1.5rem;
+  color: #ffffff;
+  z-index: 1;
+}
+
+.showcase-cabecera {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.showcase-badge-tipo {
+  font-size: 0.7rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.badge-tipo--pdf { background: #dc2626; color: white; }
+.badge-tipo--video { background: #7c3aed; color: white; }
+.badge-tipo--enlace { background: #059669; color: white; }
+.badge-tipo--default { background: #475569; color: white; }
+
+.showcase-categoria {
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+
+.showcase-titulo {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.15rem;
+  color: #ffffff;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.showcase-descripcion {
+  color: #94a3b8;
+  font-size: 0.85rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.showcase-acciones {
+  margin-top: 0.5rem;
+}
+
+.btn-showcase-accion {
+  display: inline-block;
+  background: #ffffff;
+  color: #0f172a;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.45rem 0.9rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-showcase-accion:hover {
+  background: #2563eb;
+  color: #ffffff;
+}
+
+@media (max-width: 900px) {
+  .banner-atajos {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,41 @@
+[
+    {
+    "id":1,
+    "titulo": "El Pueblo no debe rogar a los Políticos para decidir su futuro, debe obligarlos",
+    "categoria": "Filosofía",
+    "tipo": "pdf",
+    "miniatura": "/thumbnails/ensayo-congreso.jpg",
+    "descripcion": "Ensayo sobre el rumbo estratégico de la protesta, con foco en el Congreso, y el bloqueo político a las demandas del proletariado.",
+    "tags": ["filosofia", "filosofía", "ensayo", "congreso", "rejas", "escritura","literatura"],
+    "enlace": "/documentos/ensayo-congreso.pdf",
+    "destacado": true
+},
+{
+    "id":2,
+    "titulo": "El contrato social",
+    "categoria": "Filosofía",
+    "tipo": "pdf",
+    "miniatura": "/thumbnails/Jean-Jacques-Rousseau-El-contrato-social.jpg",
+    "descripcion": "Obra cúspide de Jean Jacques Rousseau.",
+    "tags": ["filosofia", "filosofía", "ensayo", "congreso", "rejas", "cita","literatura"],
+    "enlace":"/documentos/Jean-Jacques-Rousseau-El-contrato-social.pdf",
+    "destacado": true
+},
+{
+    "id": 3,
+    "titulo": "Post-transitional Justice",
+    "categoria": "Estudio",
+    "tipo": "pdf",
+    "miniatura": "/thumbnails/post-transitional-justice-human-rights-trials-in-chile-and-cath-collins.jpg",
+    "descripcion": "Human Rights trials in Chile and El Salvador Post-transitional Justice C A T H C O L L I N S Post-­transitional Justice The Pennsylvania State University Press University Park, Pennsylvania Post-trans",
+    "tags": [
+        "chile",
+        "justice",
+        "transitional",
+        "human",
+        "rights",
+        "salvador"
+    ],
+    "enlace": "/documentos/Post-transitional Justice  Human Rights Trials in Chile and -- Cath Collins.pdf"
+}
+]

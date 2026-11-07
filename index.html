@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CONGRESO — Archivo y Evidencia Histórica</title>
+
+    <!-- Google Fonts: Raleway -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;700;900&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+
+    <!-- 1. ESCENARIO DE FONDO ARTÍSTICO (Viento, humo, chispas) -->
+    <div id="escenario-artistico" aria-hidden="true"></div>
+
+    <!-- 2. DOMINIO OPERATIVO: Barra de herramientas (Oculta al inicio) -->
+    <header id="cabecera-principal" class="vista-oculta">
+      <nav class="barra-navegacion">
+        <button id="btn-volver-home" class="btn-tab activo">🏛 Archivo Central</button>
+        <button id="btn-explorador" class="btn-tab">🔍 Explorador</button>
+        <button id="btn-pizarra" class="btn-tab">📋 Pizarra de Trabajo</button>
+      </nav>
+    </header>
+
+    <!-- 3. DOMINIO EDITORIAL: 3 Círculos Anónimos para el Tríptico del Home -->
+    <nav id="nav-nodos-home" class="nav-nodos-home vista-oculta" aria-label="Navegación del Tríptico">
+      <button id="nodo-portada" class="nodo-circulo activo" title="Acto 1: Portada" aria-label="Portada"></button>
+      <button id="nodo-actualidad" class="nodo-circulo" title="Acto 2: Actualidad" aria-label="Actualidad"></button>
+      <button id="nodo-inicio" class="nodo-circulo" title="Acto 3: Despacho" aria-label="Despacho"></button>
+    </nav>
+
+    <!-- 4. CONTENEDOR PRINCIPAL DE VISTAS -->
+    <main>
+
+      <!-- ACTO 1 (Pestaña 1): Portada Monumental Limpia -->
+      <div id="vista-portada">
+        <section class="pantalla-portada">
+          
+          <div class="portada-emblema-wrapper">
+            <span class="emblema-punto"></span>
+            <span class="subtexto-institucional"></span>
+          </div>
+
+          <h1 
+            id="titulo-portada-trigger" 
+            class="titulo-monumental-portada" 
+            role="button" 
+            tabindex="0" 
+            title="Haz clic para continuar"
+          >
+            CONGRESO
+          </h1>
+
+          <div class="indicador-ingreso">
+            <span class="texto-ingreso">[ HAZ CLIC PARA CONTINUAR ]</span>
+            <span class="flecha-ingreso">→</span>
+          </div>
+
+        </section>
+      </div>
+
+      <!-- ACTO 2 (Pestaña 2): Actualidad Limpia (Espacio con telón negro exclusivo) -->
+      <div id="vista-actualidad" class="vista-oculta">
+        <!-- Aquí inyectaremos el contenido limpio y el disparador 'ACTUALIDAD' en la Fase 2 -->
+      </div>
+
+      <!-- ACTO 3 (Pestaña 3): Despacho / Índice Completo (Sin telón negro, con atajos) -->
+      <div id="vista-inicio" class="vista-oculta"></div>
+
+      <!-- HERRAMIENTA OPERATIVA: Buscador Individual -->
+      <div id="vista-explorador" class="vista-oculta">
+        <section class="barra-filtros">
+          <input 
+            type="search" 
+            id="buscador" 
+            placeholder="Buscar por título, tema, tag..."
+            autocomplete="off"
+          />
+          <select id="filtro-categoria">
+            <option value="todas">Todas las categorías</option>
+          </select>
+        </section>
+
+        <p id="contador-resultados" class="contador"></p>
+        <section id="contenedor-datos" class="grid-datos"></section>
+      </div>
+
+      <!-- HERRAMIENTA OPERATIVA: Pizarra de Análisis -->
+      <div id="vista-pizarra" class="vista-oculta">
+        <div class="contenedor-pizarra">
+
+          <aside class="panel-lateral-pizarra">
+            <h3>Archivos Disponibles</h3>
+            <p class="subtexto-pizarra">Arrastra los que quieras analizar:</p>
+            <div id="lista-arrastrables" class="lista-arrastrables"></div>
+          </aside>
+
+          <section class="area-trabajo">
+            <div class="cabecera-area">
+              <div class="herramientas-mesa">
+                <button id="btn-toggle-panel" class="btn-secundario" title="Ocultar/Mostrar lista lateral">
+                  ◀ Ocultar Panel
+                </button>
+
+                <div class="grupo-split">
+                  <button class="btn-split activo" data-layout="horizontal" title="Vista en columnas paralelas">
+                    ⬌ Columnas
+                  </button>
+                  <button class="btn-split" data-layout="vertical" title="Vista en filas apiladas">
+                    ⬍ Filas
+                  </button>
+                  <button class="btn-split" data-layout="grid" title="Vista en cuadrícula 2x2">
+                    ⊞ Grid
+                  </button>
+                </div>
+
+                <button id="btn-pantalla-completa" class="btn-secundario" title="Modo Pantalla Completa">
+                  ⛶
+                </button>
+              </div>
+
+              <button id="btn-limpiar-pizarra" class="btn-secundario">Limpiar Mesa</button>
+            </div>
+
+            <div id="zona-suelta" class="zona-suelta" data-layout="horizontal">
+              <div class="mensaje-zona-vacia">
+                <span class="icono-drop">📥</span>
+                <p>Arrastra y suelta documentos aquí para compararlos</p>
+              </div>
+            </div>
+
+            <div id="panel-metricas" class="panel-metricas vista-oculta"></div>
+          </section>
+
+        </div>
+      </div>
+
+    </main>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
