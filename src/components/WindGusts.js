@@ -44,14 +44,30 @@ export function dispararRafagaBelica(duracionMs = 2000) {
 }
 
 /**
- * CONTROL DE CENIZAS: Pausa o reactiva las cenizas (requerido por main.js para la cinemática)
+ * CONTROL DE CENIZAS Y RESIDUOS LATERALES:
+ * Apaga todo lo que venga de la derecha durante la cinemática del gorro,
+ * dejando protagonismo absoluto a las partículas verticales que suben desde abajo.
  */
 export function pausarCenizas(pausar = true) {
   if (!contenedorGlobal) return;
+
+  // 1. Ocultar las cenizas y fragmentos de papel quemado de la derecha
   const capasCenizas = contenedorGlobal.querySelectorAll(".capa-briznas-papel");
   capasCenizas.forEach((capa) => {
     capa.style.display = pausar ? "none" : "";
   });
+
+  // 2. Ocultar las chispas horizontales de la derecha para evitar cruces visuales
+  const canvasChispas = contenedorGlobal.querySelector("#canvas-chispas");
+  if (canvasChispas) {
+    canvasChispas.style.display = pausar ? "none" : "";
+  }
+
+  // 3. Ocultar las corrientes de viento laterales
+  const svgViento = contenedorGlobal.querySelector(".svg-corrientes-viento");
+  if (svgViento) {
+    svgViento.style.display = pausar ? "none" : "";
+  }
 }
 
 // Clase única para chispas con física térmica y estela

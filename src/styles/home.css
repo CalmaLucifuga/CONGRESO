@@ -847,3 +847,246 @@
     gap: 1rem;
   }
 }
+
+
+/* =========================================================
+   ACTO 3: DÍPTICO EDITORIAL CONTENIDO (PROPORCIÓN Y AIRE)
+   ========================================================= */
+
+.escaparate-split-layout {
+  min-height: calc(100vh - 6rem);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 1.5rem 0;
+}
+
+/* Contenedor acotado con margen máximo de 1200px */
+.split-contenedor-editorial {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  width: 100%;
+  max-width: 1200px;
+  min-height: 68vh;
+  align-items: stretch;
+}
+
+/* Mitad Izquierda: Imagen enmarcada con esquinas redondeadas */
+.columna-imagen-preview {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: #0d0a08;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.img-split-ensayo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: none;
+  /* Ya no tiene transform: scale en hover */
+}
+
+.columna-imagen-preview:hover .img-split-ensayo {
+  transform: scale(1.00);
+}
+
+.overlay-boton-ver {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent; /* TOTALMENTE TRANSPARENTE */
+  pointer-events: none;
+}
+
+.btn-ver-aqui {
+  pointer-events: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 2.4rem;
+  background: rgba(12, 10, 8, 0.50); /* Mantiene su vidrio ahumado */
+  border: none;
+  border-radius: 4px;
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);
+  outline: none;
+  overflow: hidden; /* CORTA EL TEXTO CUANDO SALE Y ENTRA */
+  position: relative;
+  transition: box-shadow 0.3s ease;
+}
+
+/* En hover YA NO se vuelve blanco, solo intensifica sutilmente la sombra */
+.btn-ver-aqui:hover {
+  background: rgba(12, 10, 8, 0.60);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+.texto-carrusel {
+  display: inline-block;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 800;
+  letter-spacing: 0.24em;
+  text-indent: 0.24em;
+  text-transform: uppercase;
+  will-change: transform;
+}
+
+/* Disparo del carrusel: se ejecuta 1 sola vez por hover */
+.btn-ver-aqui:hover .texto-carrusel {
+  animation: carruselVerticalTexto 0.55s cubic-bezier(0.4, 0, 0.2, 1) 1 forwards;
+}
+
+@keyframes carruselVerticalTexto {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  38% {
+    /* Baja y desaparece por el borde inferior */
+    transform: translate3d(0, 160%, 0);
+  }
+  39% {
+    /* Salto invisible a la parte superior (fuera de la vista) */
+    transform: translate3d(0, -160%, 0);
+  }
+  100% {
+    /* Entra por arriba y se asienta de nuevo en el centro */
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Mitad Derecha: Cubículo con fondo en blur */
+.columna-datos-blur {
+  background: rgba(18, 14, 12, 0.55);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 14px;
+  padding: 3rem 2.5rem;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  user-select: text;
+}
+
+.tarjeta-blur-contenido {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  max-width: 440px;
+}
+
+.badge-split-editorial {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.25em;
+  color: #ef4444;
+  text-transform: uppercase;
+}
+
+.titulo-split-editorial {
+  font-family: 'Raleway', sans-serif;
+  font-size: clamp(2rem, 3.2vw, 2.8rem);
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  text-indent: 0.18em;
+  text-transform: uppercase;
+  color: #f5f2eb;
+  line-height: 1.15;
+}
+
+.linea-adorno-split {
+  width: 50px;
+  height: 2px;
+  background: #c5b28a;
+  border-radius: 2px;
+}
+
+.descripcion-split-editorial {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  color: #c4b5a5;
+}
+
+.tags-split-editorial {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 0.4rem;
+}
+
+.tag-split {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #a89685;
+  border: 1px solid rgba(197, 178, 138, 0.3);
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+}
+
+/* =========================================================
+   ADAPTACIÓN MÓVIL (APILADO CONTENIDO)
+   ========================================================= */
+
+@media (max-width: 850px) {
+  .escaparate-split-layout {
+    min-height: auto;
+    padding: 0.5rem 0 3.5rem 0;
+  }
+
+  .split-contenedor-editorial {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    min-height: auto;
+  }
+
+  .columna-imagen-preview {
+    width: 100%;
+    min-height: 380px;
+    max-height: 52vh;
+    border-radius: 12px;
+  }
+
+  .btn-ver-aqui {
+    padding: 0.7rem 1.8rem;
+    font-size: 0.78rem;
+  }
+
+  .columna-datos-blur {
+    width: 100%;
+    padding: 2.2rem 1.5rem;
+    border-radius: 12px;
+  }
+
+  .titulo-split-editorial {
+    font-size: 1.8rem;
+  }
+
+  .descripcion-split-editorial {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+}

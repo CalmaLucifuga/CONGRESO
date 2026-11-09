@@ -5,42 +5,70 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CONGRESO — Archivo y Evidencia Histórica</title>
 
-    <!-- Google Fonts: Raleway -->
+    <!-- Google Fonts: Raleway (Pesos 300, 700 y 900) -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;700;900&display=swap" rel="stylesheet" />
   </head>
   <body>
 
-    <!-- 1. ESCENARIO DE FONDO ARTÍSTICO (Viento, humo, chispas) -->
+    <!-- 1. ESCENARIO DE FONDO ARTÍSTICO (Viento, humo denso, chispas) -->
     <div id="escenario-artistico" aria-hidden="true"></div>
 
-    <!-- 2. DOMINIO OPERATIVO: Barra de herramientas (Oculta al inicio) -->
-    <header id="cabecera-principal" class="vista-oculta">
-      <nav class="barra-navegacion">
-        <button id="btn-volver-home" class="btn-tab activo">🏛 Archivo Central</button>
-        <button id="btn-explorador" class="btn-tab">🔍 Explorador</button>
-        <button id="btn-pizarra" class="btn-tab">📋 Pizarra de Trabajo</button>
-      </nav>
+    <!-- 2. CABECERA EDITORIAL BLANCA (Estilo 3 Columnas) -->
+    <header id="cabecera-principal" class="cabecera-blanca-editorial vista-oculta">
+      <div class="fila-cabecera-tres-columnas">
+        
+        <!-- Izquierda: Navegación de funciones -->
+        <nav class="nav-izquierda-funciones">
+          <button id="btn-volver-home" class="link-nav-cabecera activo">ARCHIVO</button>
+          <button id="btn-explorador" class="link-nav-cabecera">DOCUMENTOS</button>
+          <button id="btn-pizarra" class="link-nav-cabecera">PIZARRA</button>
+        </nav>
+
+        <!-- Centro: Logotipo de marca "CONGRESO" -->
+        <div class="logo-centro-cabecera">
+          <span id="logo-nav-congreso" class="logo-congreso-marca" role="button" tabindex="0" title="Volver a Portada">
+            CONGRESO
+          </span>
+        </div>
+
+        <!-- Derecha: Buscador integrado in situ -->
+        <div class="utilidad-derecha-buscador">
+          <div class="caja-input-busqueda">
+            <span class="icono-lupa-cabecera">🔍</span>
+            <input 
+              type="search" 
+              id="input-buscador-cabecera" 
+              placeholder="BUSCAR DOCUMENTOS..." 
+              autocomplete="off"
+            />
+          </div>
+
+          <!-- Desplegable con resultados de búsqueda en vivo -->
+          <div id="dropdown-resultados-cabecera" class="resultados-busqueda-flotante vista-oculta"></div>
+        </div>
+
+      </div>
     </header>
 
-    <!-- 3. DOMINIO EDITORIAL: 3 Círculos Anónimos para el Tríptico del Home -->
+    <!-- 3. DOMINIO EDITORIAL: 3 Círculos Anónimos Flotantes -->
     <nav id="nav-nodos-home" class="nav-nodos-home vista-oculta" aria-label="Navegación del Tríptico">
       <button id="nodo-portada" class="nodo-circulo activo" title="Acto 1: Portada" aria-label="Portada"></button>
       <button id="nodo-actualidad" class="nodo-circulo" title="Acto 2: Actualidad" aria-label="Actualidad"></button>
       <button id="nodo-inicio" class="nodo-circulo" title="Acto 3: Despacho" aria-label="Despacho"></button>
     </nav>
 
-    <!-- 4. CONTENEDOR PRINCIPAL DE VISTAS -->
+    <!-- 4. CONTENEDOR PRINCIPAL DE TODAS LAS VISTAS -->
     <main>
 
-      <!-- ACTO 1 (Pestaña 1): Portada Monumental Limpia -->
+      <!-- ACTO 1: Portada Monumental Limpia -->
       <div id="vista-portada">
         <section class="pantalla-portada">
           
           <div class="portada-emblema-wrapper">
             <span class="emblema-punto"></span>
-            <span class="subtexto-institucional"></span>
+            <span class="subtexto-institucional">REGISTRO & EVIDENCIA DOCUMENTAL</span>
           </div>
 
           <h1 
@@ -61,16 +89,16 @@
         </section>
       </div>
 
-      <!-- ACTO 2 (Pestaña 2): Actualidad Limpia -->
+      <!-- ACTO 2: Actualidad (Crónica Histórica a la izquierda con Fondo Negro) -->
       <div id="vista-actualidad" class="vista-oculta"></div>
 
-      <!-- ESCENA INTERSTICIAL: Cinemática de Traspaso Histórico (Paso 1) -->
+      <!-- ESCENA INTERSTICIAL: Cinemática de Traspaso (1990) -->
       <div id="vista-cinematica" class="vista-oculta"></div>
 
-      <!-- ACTO 3 (Pestaña 3): Despacho / Índice Completo -->
+      <!-- ACTO 3: Despacho Lookbook (Díptico 50/50 borde a borde) -->
       <div id="vista-inicio" class="vista-oculta"></div>
 
-      <!-- HERRAMIENTA OPERATIVA: Buscador Individual -->
+      <!-- HERRAMIENTA OPERATIVA: Buscador Individual Completo -->
       <div id="vista-explorador" class="vista-oculta">
         <section class="barra-filtros">
           <input 
@@ -88,7 +116,7 @@
         <section id="contenedor-datos" class="grid-datos"></section>
       </div>
 
-      <!-- HERRAMIENTA OPERATIVA: Pizarra de Análisis -->
+      <!-- HERRAMIENTA OPERATIVA: Pizarra de Análisis Comparativo -->
       <div id="vista-pizarra" class="vista-oculta">
         <div class="contenedor-pizarra">
 
@@ -140,6 +168,7 @@
 
     </main>
 
+    <!-- Script orquestador principal -->
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

@@ -1,29 +1,31 @@
 import datos from "../data/proyectos.json";
-import { ShowcaseCard } from "../components/ShowcaseCard.js";
 
 export function inicializarInicio() {
   const contenedorActualidad = document.querySelector("#vista-actualidad");
   const contenedorInicio = document.querySelector("#vista-inicio");
 
-  // Agrupar dinámicamente por categoría
-  const categoriasMap = datos.reduce((acumulador, doc) => {
-    const cat = doc.categoria || "General";
-    if (!acumulador[cat]) acumulador[cat] = [];
-    acumulador[cat].push(doc);
-    return acumulador;
-  }, {});
+  // Primer y segundo documento de proyectos.json para el díptico editorial
+  const doc1 = datos[0] || {
+    titulo: "Ensayo Central",
+    miniatura: "/fondos/24000001-large.png",
+    enlace: "#",
+  };
+  const doc2 = datos[1] || {
+    titulo: "Documento Complementario",
+    miniatura:
+      "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1000",
+    enlace: "#",
+  };
 
-  const listaCategorias = Object.keys(categoriasMap);
-
-  // -------------------------------------------------------------
-  // ACTO 2 (PESTAÑA 2): CRÓNICA HISTÓRICA — TRASLADO DEL CONGRESO
-  // Limitado al 58% de ancho a la izquierda para respetar la marea
-  // -------------------------------------------------------------
+  // =============================================================
+  // 1. ACTO 2 (PESTAÑA 2): CRÓNICA HISTÓRICA A LA IZQUIERDA
+  // Ocupa el 58% para convivir con la marea de la derecha
+  // =============================================================
   if (contenedorActualidad) {
     contenedorActualidad.innerHTML = `
       <section class="pantalla-actualidad cronica-congreso">
         
-        <!-- Distintivo superior sobrio -->
+        <!-- Distintivo superior -->
         <div class="actualidad-emblema-wrapper">
           <span class="emblema-punto"></span>
           <span class="subtexto-institucional">GÉNESIS & DESPLAZAMIENTO DEL PODER LEGISLATIVO</span>
@@ -41,7 +43,7 @@ export function inicializarInicio() {
           </div>
         </article>
 
-        <!-- HITO 2: 1987 (Con ranura para fotografía a la derecha) -->
+        <!-- HITO 2: 1987 (Con foto sticker del gorro militar a la derecha) -->
         <article class="hito-cronica hito-con-foto">
           <div class="cuerpo-hito">
             <h2 class="ano-cronica">1987</h2>
@@ -51,13 +53,12 @@ export function inicializarInicio() {
             </p>
           </div>
 
-          <!-- ESPACIO RESERVADO PARA FOTO DEL GORRO DE PINOCHET -->
+          <!-- ESPACIO RESERVADO: FOTO STICKER RECORTADA SIN MARCO -->
           <aside class="espacio-foto-relieve">
             <div class="marco-foto-historica">
-              <!-- Puedes guardar tu foto como /fondos/gorro-pinochet.png o .jpg en public/ -->
               <img 
                 src="/fondos/gorro-pinochet.png" 
-                alt="Emblema / Gorro Militar Pinochet" 
+                alt="Emblema / Gorro Militar" 
                 class="img-historica"
                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
               />
@@ -78,7 +79,7 @@ export function inicializarInicio() {
           </p>
         </article>
 
-        <!-- DISPARADOR FINAL: Salto a la tercera pestaña -->
+        <!-- DISPARADOR HACIA LA CINEMÁTICA: ACTUALIDAD -->
         <div class="bloque-trigger-actualidad">
           <div class="linea-cierre-cronica"></div>
           <h2 
@@ -86,12 +87,12 @@ export function inicializarInicio() {
             class="titulo-actualidad-interactivo" 
             role="button" 
             tabindex="0" 
-            title="Haz clic para entrar al despacho completo"
+            title="Haz clic para continuar"
           >
             ACTUALIDAD
           </h2>
           <div class="indicador-ingreso-actualidad">
-            <span class="texto-ingreso">[ INGRESAR AL ARCHIVO COMPLETO ]</span>
+            <span class="texto-ingreso">[ AVANZAR EN EL TIEMPO ]</span>
             <span class="flecha-ingreso">→</span>
           </div>
         </div>
@@ -100,74 +101,58 @@ export function inicializarInicio() {
     `;
   }
 
-  // -------------------------------------------------------------
-  // 2. ACTO 3 (PESTAÑA 3): EL DESPACHO COMPLETO
-  // Aquí es donde viven los atajos y las colecciones clasificadas
-  // -------------------------------------------------------------
+  // =============================================================
+  // 2. ACTO 3 (PESTAÑA 3): DÍPTICO CONTENIDO (IZQUIERDA Y DERECHA)
+  // Con ancho acotado, márgenes y cubículo con blur
+  // =============================================================
   if (contenedorInicio) {
     contenedorInicio.innerHTML = `
-      <section class="seccion-inicio">
-        
-        <header class="despacho-cabecera">
-          <span class="despacho-badge">DESPACHO & ÍNDICE GENERAL</span>
-          <h2>Archivo Documental Clasificado</h2>
-          <p>Centro de consulta, lectura individual y análisis cruzado de evidencia histórica.</p>
-        </header>
-
-        <!-- Los atajos viven exclusivamente aquí en el Acto 3 -->
-        <div class="banner-atajos">
-          <div class="atajo-card" id="atajo-explorador">
-            <span class="atajo-icono">🔍</span>
-            <h4>Explorador Documental</h4>
-            <p>Búsqueda individual por palabras clave, áreas temáticas y lectura directa de PDFs.</p>
-            <button class="btn-atajo">Ir al Explorador →</button>
+      <section class="seccion-inicio escaparate-split-layout">
+        <div class="split-contenedor-editorial">
+          
+          <!-- MITAD IZQUIERDA: Imagen con botón "VER AQUÍ" -->
+          <div class="columna-split columna-imagen-preview">
+            <img 
+              src="${doc1.miniatura || "/fondos/24000001-large.png"}" 
+              alt="${doc1.titulo}" 
+              class="img-split-ensayo"
+              onerror="this.src='https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=1000'"
+            />
+            
+            <div class="overlay-boton-ver">
+              <a 
+                href="${doc1.enlace || "#"}" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="btn-ver-aqui"
+              >
+                <span class="texto-carrusel">VER AQUÍ</span>
+              </a>
+            </div>
           </div>
 
-          <div class="atajo-card" id="atajo-pizarra">
-            <span class="atajo-icono">📋</span>
-            <h4>Pizarra de Trabajo</h4>
-            <p>Mesa de análisis comparativo con visores paralelos en pantalla dividida.</p>
-            <button class="btn-atajo btn-atajo--secundario">Abrir Pizarra →</button>
+          <!-- MITAD DERECHA: Cubículo con fondo blur y descripción -->
+          <div class="columna-split columna-datos-blur">
+            <div class="tarjeta-blur-contenido">
+              <span class="badge-split-editorial">DOCUMENTO I — ARCHIVO CENTRAL</span>
+              <h2 class="titulo-split-editorial">VER PRIMERO</h2>
+              <div class="linea-adorno-split"></div>
+              
+              <p class="descripcion-split-editorial">
+                ${doc1.descripcion || "Análisis documental crítico y registro histórico central de la colección legislativa."}
+              </p>
+
+              <div class="tags-split-editorial">
+                ${(doc1.tags || ["HISTORIA", "CONGRESO", "ARCHIVO"])
+                  .slice(0, 3)
+                  .map((tag) => `<span class="tag-split">${tag}</span>`)
+                  .join("")}
+              </div>
+            </div>
           </div>
+
         </div>
-
-        <!-- Fondos temáticos por categorías -->
-        <div class="contenedor-fondos">
-          ${listaCategorias
-            .map((cat) => {
-              const docs = categoriasMap[cat];
-              return `
-              <section class="bloque-categoria" data-categoria="${cat}">
-                <header class="cabecera-categoria">
-                  <span class="sello-categoria">✦ FONDO CLASIFICADO ✦</span>
-                  <h3>${cat}</h3>
-                  <p class="contador-categoria">${docs.length} documento(s) archivado(s)</p>
-                  <div class="linea-categoria"></div>
-                </header>
-
-                <div class="grid-documentos-inicio">
-                  ${docs.map((doc) => ShowcaseCard(doc, false)).join("")}
-                </div>
-              </section>
-            `;
-            })
-            .join("")}
-        </div>
-
       </section>
     `;
-
-    // Conectar botones de los atajos del Acto 3
-    contenedorInicio
-      .querySelector("#atajo-explorador button")
-      .addEventListener("click", () => {
-        document.querySelector("#btn-explorador").click();
-      });
-
-    contenedorInicio
-      .querySelector("#atajo-pizarra button")
-      .addEventListener("click", () => {
-        document.querySelector("#btn-pizarra").click();
-      });
   }
 }

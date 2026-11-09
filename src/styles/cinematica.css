@@ -149,72 +149,98 @@
 }
 
 /* =========================================================
-   3. FOTOGRAFÍA DRAMÁTICA Y TEXTO CALIBRADO (9.5s)
+   3. FOTOGRAFÍA DE 1990 CON TITULAR EXTERIOR GRANDE
    ========================================================= */
 
 .actor-foto-traspaso {
   position: absolute;
   z-index: 30;
   width: 90%;
-  max-width: 800px;
+  max-width: 820px;
   display: flex;
-  justify-content: center;
+  flex-direction: column; /* Texto arriba, foto abajo */
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;            /* Espacio de separación entre el texto y la foto */
   pointer-events: none;
   animation: reveladoFotoHistorica 9.5s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
   will-change: transform, opacity, filter;
 }
 
+/* Encabezado tipográfico que flota libre sobre el fondo */
+.encabezado-traspaso-1990 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 750px;
+}
+
+/* 1. FECHA GRANDE FUERA DE LA FOTO */
+.fecha-titular-1990 {
+  font-family: 'Raleway', sans-serif;
+  font-size: clamp(2.4rem, 4.8vw, 3.6rem); /* Grande y dominante */
+  font-weight: 900;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: #f5f2eb;                          /* Blanco marfil de alto impacto */
+  line-height: 1.05;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.85);
+}
+
+/* 2. SUBTÍTULO DEBAJO DE LA FECHA */
+.bajada-titular-1990 {
+  font-family: system-ui, -apple-system, sans-serif;
+  font-size: clamp(1.05rem, 1.8vw, 1.25rem);
+  color: #c4b5a5;                          /* Ceniza suave y nítido */
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  max-width: 660px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+/* 3. MARCO EXCLUSIVO PARA LA IMAGEN */
 .marco-traspaso-1990 {
+  width: 100%;
   background: #0d0a08;
-  padding: 1.1rem;
+  padding: 0.6rem;
   border-radius: 12px;
   border: 1px solid rgba(197, 178, 138, 0.45);
   box-shadow: 
     0 25px 60px rgba(0, 0, 0, 0.95),
     0 0 35px rgba(225, 80, 20, 0.25);
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
 }
 
 .img-foto-1990 {
   width: 100%;
   height: auto;
-  max-height: 430px;
+  max-height: 400px;
   object-fit: cover;
   border-radius: 8px;
   filter: contrast(1.1) brightness(0.95);
   display: block;
 }
 
-/* Placa con los nuevos textos dramáticos */
-.placa-epigrafe-1990 {
-  text-align: center;
-  padding: 0.5rem 0.8rem 0.3rem;
-  font-family: 'Raleway', sans-serif;
-}
+/* Adaptación móvil */
+@media (max-width: 850px) {
+  .actor-foto-traspaso {
+    width: 95%;
+    gap: 1rem;
+  }
 
-/* 1. TEXTO GRANDE */
-.fecha-titular-1990 {
-  font-size: clamp(1.8rem, 3.6vw, 2.5rem);
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: #f5f2eb; /* Blanco marfil de alto impacto */
-  margin-bottom: 0.45rem;
-  line-height: 1.1;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
-}
+  .fecha-titular-1990 {
+    font-size: clamp(1.8rem, 7vw, 2.4rem);
+  }
 
-/* 2. SUBTÍTULO MÁS PEQUEÑO Y DE LECTURA CÓMODA */
-.bajada-titular-1990 {
-  font-size: clamp(0.95rem, 1.8vw, 1.18rem);
-  color: #c4b5a5; /* Ceniza suave */
-  font-weight: 500;
-  line-height: 1.5;
-  letter-spacing: 0.02em;
-  max-width: 680px;
-  margin: 0 auto;
+  .bajada-titular-1990 {
+    font-size: 0.95rem;
+    line-height: 1.4;
+  }
+
+  .img-foto-1990 {
+    max-height: 230px;
+  }
 }
 
 /* REVELADO CON CASI 4 SEGUNDOS DE LECTURA TRANQUILA */

@@ -103,17 +103,16 @@ export async function navegarA(nombreVista, conPreDelay = false) {
 
   enTransicion = true;
 
-  // -----------------------------------------------------------
+  // ===========================================================
   // CASO EXCLUSIVO: CINEMÁTICA DEL GORRO (ENTRE PESTAÑA 2 Y 3)
-  // -----------------------------------------------------------
+  // ===========================================================
   if (nombreVista === "cinematica") {
-    // 1. Apagar cenizas de la derecha solo para la cinemática
+    // 1. Apagamos TODO lo que cruza desde la derecha
     pausarCenizas(true);
 
-    // 2. El telón negro toma el 100% de la pantalla
+    // 2. El fondo de WebGL conquista el 100% de la pantalla
     fijarModoTelonNegro("total");
 
-    // 3. Elevación del texto de la Pestaña 2
     if (entradaActual && entradaActual[1].el) {
       entradaActual[1].el.classList.add("actualidad-salida-arriba");
     }
@@ -130,9 +129,11 @@ export async function navegarA(nombreVista, conPreDelay = false) {
     vistaDestino.el.classList.remove("vista-oculta");
     enTransicion = false;
 
-    // 4. Reproducir la película y al terminar reactivar cenizas y viajar a Inicio
+    // 3. Al terminar la película y dar paso a la Pestaña 3:
     reproducirCinematica(() => {
+      // REACTIVAMOS las cenizas y partículas de la derecha para la Pestaña 3
       pausarCenizas(false);
+
       vistaDestino.el.classList.add("vista-oculta");
       navegarA("inicio");
     });
@@ -313,3 +314,89 @@ if (navNodosHome) navNodosHome.classList.add("vista-oculta");
 if (nodoPortada) nodoPortada.classList.add("activo");
 if (nodoActualidad) nodoActualidad.classList.remove("activo");
 if (nodoInicio) nodoInicio.classList.remove("activo");
+
+import datos from "./data/proyectos.json";
+
+// =========================================================
+// BUSCADOR EN VIVO DE LA CABECERA BLANCA
+// =========================================================
+const inputBusquedaCabecera = document.querySelector(
+  "#input-buscador-cabecera",
+);
+const dropdownResultados = document.querySelector(
+  "#dropdown-resultados-cabecera",
+);
+const logoNavCongreso = document.querySelector("#logo-nav-congreso");
+
+// Al hacer clic en el logo "CONGRESO" de la barra, volvemos a la Portada
+if (logoNavCongreso) {
+  logoNavCongreso.addEventListener("click", () => {
+    navegarA("portada");
+  });
+}
+
+// Búsqueda reactiva mientras el usuario escribe
+if (inputBusquedaCabecera && dropdownResultados) {
+  inputBusquedaCabecera.addEventListener("input", (e) => {
+    const termino = e.target.value.toLowerCase().trim();
+
+    if (termino.length === 0) {
+      dropdownResultados.classList.add("vista-oculta");
+      dropdownResultados.innerHTML = "";
+      return;
+    }
+
+    // Filtrar documentos por título, descripción o categoría
+    const coincidentes = datos.filter((doc) => {
+      const tit = (doc.titulo || "").toLowerCase();
+      const desc = (doc.descripcion || "").toLowerCase();
+      const cat = (doc.categoria || "").toLowerCase();
+      return (
+        tit.includes(termino) || desc.includes(termino) || cat.includes(termino)
+      );
+    });
+
+    if (coincidentes.length === 0) {
+      dropdownResultados.innerHTML = `
+        <div style="padding: 0.8rem; text-align: center; color: #71717a; font-size: 0.8rem;">
+          No se encontraron documentos
+        </div>
+      `;
+    } else {
+      dropdownResultados.innerHTML = coincidentes
+        .slice(0, 5)
+        .map(
+          (doc) => `
+        <div class="item-resultado-rapido" data-enlace="${doc.enlace}">
+          <span class="titulo-item-rapido">${doc.titulo}</span>
+          <span class="categoria-item-rapido">${doc.categoria} · Abrir Documento ↗</span>
+        </div>
+      `,
+        )
+        .join("");
+
+      // Clic para abrir el documento directamente
+      dropdownResultados
+        .querySelectorAll(".item-resultado-rapido")
+        .forEach((item) => {
+          item.addEventListener("click", () => {
+            const enlace = item.dataset.enlace;
+            if (enlace && enlace !== "#") {
+              window.open(enlace, "_blank");
+            }
+            dropdownResultados.classList.add("vista-oculta");
+            inputBusquedaCabecera.value = "";
+          });
+        });
+    }
+
+    dropdownResultados.classList.remove("vista-oculta");
+  });
+
+  // Cerrar el desplegable si se hace clic fuera de la cabecera
+  document.addEventListener("click", (e) => {
+    if (!e.target.closest(".utilidad-derecha-buscador")) {
+      dropdownResultados.classList.add("vista-oculta");
+    }
+  });
+}

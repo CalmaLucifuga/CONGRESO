@@ -47,8 +47,18 @@ export function reproducirCinematica(onCompletar) {
         />
       </div>
 
-      <!-- ELEMENTO 2: Fotografía del Cambio de Mando 1990 con nuevo texto dramático -->
+      <!-- ELEMENTO 2: Fotografía del Cambio de Mando 1990 con texto exterior -->
       <div class="actor-foto-traspaso" id="actor-foto">
+        
+        <!-- BLOQUE TIPOGRÁFICO EXTERIOR (Fuera de la imagen) -->
+        <header class="encabezado-traspaso-1990">
+          <h3 class="fecha-titular-1990">11 de marzo de 1990</h3>
+          <p class="bajada-titular-1990">
+            Pinochet inaugura el Congreso en Valparaíso, dando pie a su nueva democracia
+          </p>
+        </header>
+
+        <!-- MARCO EXCLUSIVO DE LA FOTOGRAFÍA -->
         <div class="marco-traspaso-1990">
           <img 
             src="/fondos/cambio-mando-1990.jpg" 
@@ -56,13 +66,9 @@ export function reproducirCinematica(onCompletar) {
             class="img-foto-1990"
             onerror="this.src='https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=1200'"
           />
-          <div class="placa-epigrafe-1990">
-            <!-- TEXTO GRANDE DRAMÁTICO -->
-            <h3 class="fecha-titular-1990">11 de marzo de 1990</h3>
-            <!-- SUBTÍTULO DE LECTURA PAUSADA -->
-            <p class="bajada-titular-1990">Pinochet inaugura el Congreso en Valparaíso, dando pie a su nueva democracia</p>
-          </div>
         </div>
+
+      </div>
       </div>
 
     </div>
