@@ -57,7 +57,7 @@ const FRAGMENT_SHADER_SRC = `
     vec2 uv = v_uv;
     bool esMovil = u_resolution.x < u_resolution.y;
 
-    float zoomBase = esMovil ? 2.20 : 1.0;
+    float zoomBase = esMovil ? 1.50 : 1.0;
     vec2 uvBase = getCoverUV(uv, u_resolution, u_tex_base_size, zoomBase, 0.0);
 
     float zoomMarea = esMovil ? 2.35 : 1.0;
