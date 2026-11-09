@@ -19,7 +19,6 @@ export function dispararRafagaBelica(duracionMs = 2000) {
   fuerzaObjetivo = 3.6;
 
   // 2. ESCUADRÓN DE REFUERZO DE CHISPAS:
-  // Creamos 35 chispas NUEVAS en el borde derecho. Las originales no se tocan.
   if (canvasGlobal) {
     for (let i = 0; i < 35; i++) {
       const nuevaChispa = new Chispa(canvasGlobal);
@@ -42,6 +41,17 @@ export function dispararRafagaBelica(duracionMs = 2000) {
       capaExtra.remove();
     }, duracionMs + 1000);
   }
+}
+
+/**
+ * CONTROL DE CENIZAS: Pausa o reactiva las cenizas (requerido por main.js para la cinemática)
+ */
+export function pausarCenizas(pausar = true) {
+  if (!contenedorGlobal) return;
+  const capasCenizas = contenedorGlobal.querySelectorAll(".capa-briznas-papel");
+  capasCenizas.forEach((capa) => {
+    capa.style.display = pausar ? "none" : "";
+  });
 }
 
 // Clase única para chispas con física térmica y estela
@@ -92,8 +102,6 @@ class Chispa {
     const fueraDePantalla =
       this.vida >= this.vidaMaxima || this.x < -140 || this.y < -140;
 
-    // Si es del grupo base, reinicia en bucle infinito.
-    // Si es del grupo de refuerzo temporal, NO reinicia (deja de vivir).
     if (fueraDePantalla && !this.esTemporal) {
       this.reiniciar(false);
     }
@@ -187,7 +195,7 @@ export function iniciarVientoFondo() {
 
     <canvas id="canvas-chispas"></canvas>
 
-    <!-- Cenizas base permanentes (nunca se reinician) -->
+    <!-- Cenizas base permanentes -->
     <div class="capa-briznas-papel">
       ${generarBriznas(10)}
     </div>
@@ -206,7 +214,6 @@ export function iniciarVientoFondo() {
   window.addEventListener("resize", redimensionarCanvas);
   redimensionarCanvas();
 
-  // Partículas permanentes base (32 fijas)
   const TOTAL_CHISPAS = 32;
   const chispasBase = [];
   for (let i = 0; i < TOTAL_CHISPAS; i++) {
@@ -228,20 +235,17 @@ export function iniciarVientoFondo() {
     ctx.globalCompositeOperation = "lighter";
     ctx.lineCap = "round";
 
-    // 1. Dibujar chispas base (sin interrupciones)
     for (let i = 0; i < chispasBase.length; i++) {
       const c = chispasBase[i];
       const fisica = c.actualizar(multiplicadorViento);
       c.dibujar(ctx, fisica, multiplicadorViento);
     }
 
-    // 2. Dibujar y depurar chispas de refuerzo temporal
     for (let i = chispasExtra.length - 1; i >= 0; i--) {
       const c = chispasExtra[i];
       const fisica = c.actualizar(multiplicadorViento);
       c.dibujar(ctx, fisica, multiplicadorViento);
 
-      // Si terminó su recorrido, se elimina del array limpiando memoria
       if (fisica.terminada) {
         chispasExtra.splice(i, 1);
       }

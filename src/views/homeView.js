@@ -16,41 +16,82 @@ export function inicializarInicio() {
   const listaCategorias = Object.keys(categoriasMap);
 
   // -------------------------------------------------------------
-  // 1. ACTO 2 (PESTAÑA 2): VISTA LIMPIA CON TELÓN NEGRO
-  // Sin atajos ni barras, culminando en la palabra "ACTUALIDAD"
+  // ACTO 2 (PESTAÑA 2): CRÓNICA HISTÓRICA — TRASLADO DEL CONGRESO
+  // Limitado al 58% de ancho a la izquierda para respetar la marea
   // -------------------------------------------------------------
   if (contenedorActualidad) {
     contenedorActualidad.innerHTML = `
-      <section class="pantalla-actualidad">
+      <section class="pantalla-actualidad cronica-congreso">
         
+        <!-- Distintivo superior sobrio -->
         <div class="actualidad-emblema-wrapper">
           <span class="emblema-punto"></span>
-          <span class="subtexto-institucional">CRÓNICA & CONTEXTO HISTÓRICO</span>
+          <span class="subtexto-institucional">GÉNESIS & DESPLAZAMIENTO DEL PODER LEGISLATIVO</span>
         </div>
 
-        <div class="bloque-tesis-actualidad">
-          <h2>El Testimonio del Presente</h2>
-          <p class="parrafo-actualidad">
-            Frente al estruendo del conflicto y la fragilidad de la memoria, 
-            este archivo resguarda los registros, resoluciones y debates que definen 
-            nuestra época antes de que sean consumidos por el fuego de la historia.
+        <!-- HITO 1: 1983 - 1986 -->
+        <article class="hito-cronica">
+          <h2 class="ano-cronica">1983 — 1986</h2>
+          <p class="texto-cronica">
+            La oposición encomienda movilizaciones masivas contra el régimen de Augusto Pinochet en el centro cívico de Santiago, impactando la cotidianidad con barricadas, cortes de tránsito y duros choques con Carabineros y el Ejército.
           </p>
-        </div>
+          <div class="cita-dictamen">
+            <p>Se concluye que la excesiva concentración física de los poderes del Estado (Congreso, ministerios y La Moneda):</p>
+            <p class="dictamen-mayuscula">"DIFICULTABAN EL CONTROL POLÍTICO SOBRE LA CLASE TRABAJADORA Y MANIFESTANTES".</p>
+          </div>
+        </article>
 
-        <!-- EL DISPARADOR FINAL: Texto monumental "ACTUALIDAD" -->
+        <!-- HITO 2: 1987 (Con ranura para fotografía a la derecha) -->
+        <article class="hito-cronica hito-con-foto">
+          <div class="cuerpo-hito">
+            <h2 class="ano-cronica">1987</h2>
+            <p class="texto-cronica">
+              A pesar de todas las quejas y rechazo, bajo el marco legislativo de la Junta Militar se promulga en la Ley N° 18.678: 
+              <em class="ley-cita">"La sede del Congreso Nacional será la ciudad de Valparaíso"</em>, logrando así desconectar la fuerza de la oposición, atomizar la vida política y restar la fiscalización frente al Poder Ejecutivo a través del Congreso.
+            </p>
+          </div>
+
+          <!-- ESPACIO RESERVADO PARA FOTO DEL GORRO DE PINOCHET -->
+          <aside class="espacio-foto-relieve">
+            <div class="marco-foto-historica">
+              <!-- Puedes guardar tu foto como /fondos/gorro-pinochet.png o .jpg en public/ -->
+              <img 
+                src="/fondos/gorro-pinochet.png" 
+                alt="Emblema / Gorro Militar Pinochet" 
+                class="img-historica"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              />
+              <div class="foto-placeholder" style="display: none;">
+                <span class="icono-placeholder">🎖️</span>
+                <span>[ Foto: Gorro Militar ]</span>
+              </div>
+            </div>
+            <figcaption class="pie-foto-historica">Ley N° 18.678</figcaption>
+          </aside>
+        </article>
+
+        <!-- HITO 3: 1988 -->
+        <article class="hito-cronica">
+          <h2 class="ano-cronica">1988</h2>
+          <p class="texto-cronica">
+            El Hospital Enrique Deformes, un edificio histórico de salud pública, es el sacrificado para albergar en su posición al nuevo Congreso de Valparaíso. La resistencia de los médicos, gremios de salud y ciudadanos para la reparación y reapertura del hospital, tras el terremoto de 1985, fueron en vano.
+          </p>
+        </article>
+
+        <!-- DISPARADOR FINAL: Salto a la tercera pestaña -->
         <div class="bloque-trigger-actualidad">
+          <div class="linea-cierre-cronica"></div>
           <h2 
             id="trigger-actualidad" 
             class="titulo-actualidad-interactivo" 
             role="button" 
             tabindex="0" 
-            title="Haz clic para abrir el archivo completo"
+            title="Haz clic para entrar al despacho completo"
           >
             ACTUALIDAD
           </h2>
-
           <div class="indicador-ingreso-actualidad">
-            <span class="texto-ingreso">[ HAZ CLIC PARA ABRIR EL DESPACHO COMPLETO ]</span>
+            <span class="texto-ingreso">[ INGRESAR AL ARCHIVO COMPLETO ]</span>
             <span class="flecha-ingreso">→</span>
           </div>
         </div>

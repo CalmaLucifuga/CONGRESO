@@ -1,0 +1,269 @@
+/* =========================================================
+   ESTACIÓN INTERSTICIAL: CINEMÁTICA DE TRASPASO HISTÓRICO
+   ========================================================= */
+
+#vista-cinematica {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 25;
+  background: transparent; /* Fondo WebGL real que tomó el 100% */
+  overflow: hidden;
+  user-select: none;
+}
+
+.teatro-cinematica {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Botón accesible de salto */
+.btn-saltar-cine {
+  position: absolute;
+  top: 2rem;
+  right: 2.5rem;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #a89685;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  transition: all 0.25s ease;
+}
+
+.btn-saltar-cine:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: scale(1.04);
+}
+
+/* =========================================================
+   1. TÚNEL DE PARTÍCULAS ASCENDENTES (9.5s)
+   ========================================================= */
+
+.camara-particulas-vertical {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 26;
+  animation: incursionCamaraZoom 9.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  will-change: transform, filter;
+}
+
+.chispa-vertical {
+  position: absolute;
+  bottom: -60px;
+  left: var(--left-x, 50%);
+  width: var(--ancho-p, 2px);
+  height: 45px;
+  border-radius: 2px;
+  background: linear-gradient(
+    to top,
+    rgba(255, 80, 0, 0) 0%,
+    rgba(255, 140, 20, 0.7) 40%,
+    rgba(255, 235, 180, 1) 100%
+  );
+  box-shadow: 0 0 10px rgba(255, 100, 0, 0.8);
+  animation: ascensoParticula var(--dur-caida, 2s) linear infinite;
+  animation-delay: var(--ret-caida, 0s);
+  will-change: transform;
+}
+
+@keyframes ascensoParticula {
+  0% { transform: translate3d(0, 115vh, 0); opacity: 0; }
+  15% { opacity: 1; }
+  85% { opacity: 0.9; }
+  100% { transform: translate3d(0, -35vh, 0); opacity: 0; }
+}
+
+@keyframes incursionCamaraZoom {
+  0%, 45% {
+    transform: scale(1);
+    filter: blur(0px);
+  }
+  55% {
+    transform: scale(3.2);
+    filter: blur(1.5px);
+    opacity: 1;
+  }
+  68%, 100% {
+    transform: scale(4.5);
+    filter: blur(4px);
+    opacity: 0;
+  }
+}
+
+/* =========================================================
+   2. EL GORRO MILITAR QUE CAE (9.5s)
+   ========================================================= */
+
+.actor-gorro-descenso {
+  position: absolute;
+  z-index: 28;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  animation: coreografiaCaidaGorro 9.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  will-change: transform, opacity;
+}
+
+.img-gorro-cine {
+  width: 220px;
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.95))
+          drop-shadow(0 8px 15px rgba(235, 60, 10, 0.5));
+}
+
+@keyframes coreografiaCaidaGorro {
+  0%, 10% {
+    transform: translate3d(0, -120vh, 0) rotate(-8deg);
+    opacity: 0;
+  }
+  16% { opacity: 1; }
+  28% { transform: translate3d(0, 0, 0) rotate(3deg); }
+  38% { transform: translate3d(0, 15px, 0) rotate(-4deg); opacity: 1; }
+  48% {
+    transform: translate3d(0, 125vh, 0) rotate(18deg);
+    opacity: 0;
+  }
+  50%, 100% {
+    transform: translate3d(0, 125vh, 0);
+    opacity: 0;
+  }
+}
+
+/* =========================================================
+   3. FOTOGRAFÍA DRAMÁTICA Y TEXTO CALIBRADO (9.5s)
+   ========================================================= */
+
+.actor-foto-traspaso {
+  position: absolute;
+  z-index: 30;
+  width: 90%;
+  max-width: 800px;
+  display: flex;
+  justify-content: center;
+  pointer-events: none;
+  animation: reveladoFotoHistorica 9.5s cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+  will-change: transform, opacity, filter;
+}
+
+.marco-traspaso-1990 {
+  background: #0d0a08;
+  padding: 1.1rem;
+  border-radius: 12px;
+  border: 1px solid rgba(197, 178, 138, 0.45);
+  box-shadow: 
+    0 25px 60px rgba(0, 0, 0, 0.95),
+    0 0 35px rgba(225, 80, 20, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.img-foto-1990 {
+  width: 100%;
+  height: auto;
+  max-height: 430px;
+  object-fit: cover;
+  border-radius: 8px;
+  filter: contrast(1.1) brightness(0.95);
+  display: block;
+}
+
+/* Placa con los nuevos textos dramáticos */
+.placa-epigrafe-1990 {
+  text-align: center;
+  padding: 0.5rem 0.8rem 0.3rem;
+  font-family: 'Raleway', sans-serif;
+}
+
+/* 1. TEXTO GRANDE */
+.fecha-titular-1990 {
+  font-size: clamp(1.8rem, 3.6vw, 2.5rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #f5f2eb; /* Blanco marfil de alto impacto */
+  margin-bottom: 0.45rem;
+  line-height: 1.1;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+}
+
+/* 2. SUBTÍTULO MÁS PEQUEÑO Y DE LECTURA CÓMODA */
+.bajada-titular-1990 {
+  font-size: clamp(0.95rem, 1.8vw, 1.18rem);
+  color: #c4b5a5; /* Ceniza suave */
+  font-weight: 500;
+  line-height: 1.5;
+  letter-spacing: 0.02em;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* REVELADO CON CASI 4 SEGUNDOS DE LECTURA TRANQUILA */
+@keyframes reveladoFotoHistorica {
+  /* Espera hasta el segundo 4.8 */
+  0%, 50% {
+    opacity: 0;
+    transform: scale(0.86);
+    filter: blur(6px);
+  }
+
+  /* 5.2s: Aparece con nitidez */
+  56% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0px);
+  }
+
+  /* 5.5s a 8.8s: PERMANENCIA FIJA (~3.6 segundos de lectura serena) */
+  90% {
+    opacity: 1;
+    transform: scale(1.015);
+    filter: blur(0px);
+  }
+
+  /* 9.1s a 9.5s: Disolución suave hacia la Pestaña 3 */
+  96%, 100% {
+    opacity: 0;
+    transform: scale(1.04);
+    filter: blur(3px);
+  }
+}
+
+/* Adaptación móvil */
+@media (max-width: 850px) {
+  .actor-foto-traspaso {
+    width: 95%;
+  }
+
+  .img-foto-1990 {
+    max-height: 250px;
+  }
+
+  .fecha-titular-1990 {
+    font-size: 1.6rem;
+  }
+
+  .bajada-titular-1990 {
+    font-size: 0.9rem;
+    line-height: 1.4;
+  }
+}

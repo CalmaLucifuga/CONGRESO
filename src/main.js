@@ -1,40 +1,43 @@
 // =========================================================
-// IMPORTACIÓN MODULAR DE ESTILOS
+// 1. IMPORTACIÓN MODULAR DE ESTILOS (El motor visual)
 // =========================================================
 import "./styles/base.css";
 import "./styles/components.css";
 import "./styles/home.css";
 import "./styles/board.css";
 import "./styles/battlefield.css";
+import "./styles/cinematica.css";
 
-// Módulos de lógica y vistas
+// =========================================================
+// 2. MÓDULOS DE LÓGICA Y VISTAS
+// =========================================================
 import { inicializarInicio } from "./views/homeView.js";
 import { inicializarExplorador } from "./views/explorerView.js";
 import { iniciarScrollEngine } from "./utils/scrollEngine.js";
 import {
   iniciarVientoFondo,
   dispararRafagaBelica,
+  pausarCenizas,
 } from "./components/WindGusts.js";
 import {
   iniciarFondoInmersivo,
   dispararOleadaMarea,
-  activarTelonNegro,
+  fijarModoTelonNegro,
 } from "./components/ImmersiveBackground.js";
+import { reproducirCinematica } from "./views/cinematicaView.js";
 
-// 1. Activar fondo inmersivo y atmósfera bélica
+// =========================================================
+// 3. ARRANQUE DE MOTORES GRÁFICOS Y VISTAS BASE
+// =========================================================
 iniciarFondoInmersivo();
 iniciarVientoFondo();
-
-// 2. Activar motor de cálculo de scroll
 iniciarScrollEngine();
-
-// 3. Inicializar vistas (Acto 2 y Acto 3)
 inicializarInicio();
 inicializarExplorador();
 
-// -------------------------------------------------------------
-// 4. REGISTRO DE JERARQUÍAS (TRÍPTICO EDITORIAL + HERRAMIENTAS)
-// -------------------------------------------------------------
+// =========================================================
+// 4. REGISTRO DE ELEMENTOS Y VISTAS
+// =========================================================
 const cabecera = document.querySelector("#cabecera-principal");
 const navNodosHome = document.querySelector("#nav-nodos-home");
 
@@ -47,7 +50,6 @@ const nodoActualidad = document.querySelector("#nodo-actualidad");
 const nodoInicio = document.querySelector("#nodo-inicio");
 
 const vistas = {
-  // TRÍPTICO EDITORIAL (HOME)
   portada: {
     el: document.querySelector("#vista-portada"),
     dominio: "editorial",
@@ -58,12 +60,15 @@ const vistas = {
     dominio: "editorial",
     nodo: nodoActualidad,
   },
+  cinematica: {
+    el: document.querySelector("#vista-cinematica"),
+    dominio: "cinematica",
+  },
   inicio: {
     el: document.querySelector("#vista-inicio"),
     dominio: "editorial",
     nodo: nodoInicio,
   },
-  // HERRAMIENTAS OPERATIVAS
   explorador: {
     el: document.querySelector("#vista-explorador"),
     dominio: "operativo",
@@ -81,9 +86,9 @@ let enTransicion = false;
 
 const esperar = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-/**
- * ENRUTADOR CON TRÍPTICO EDITORIAL Y REGLA DEL TELÓN NEGRO
- */
+// =========================================================
+// 5. ENRUTADOR CENTRAL DE TRANSICIONES
+// =========================================================
 export async function navegarA(nombreVista, conPreDelay = false) {
   if (enTransicion) return;
 
@@ -98,13 +103,57 @@ export async function navegarA(nombreVista, conPreDelay = false) {
 
   enTransicion = true;
 
-  // Ráfaga bélica de refuerzos en cada viaje
+  // -----------------------------------------------------------
+  // CASO EXCLUSIVO: CINEMÁTICA DEL GORRO (ENTRE PESTAÑA 2 Y 3)
+  // -----------------------------------------------------------
+  if (nombreVista === "cinematica") {
+    // 1. Apagar cenizas de la derecha solo para la cinemática
+    pausarCenizas(true);
+
+    // 2. El telón negro toma el 100% de la pantalla
+    fijarModoTelonNegro("total");
+
+    // 3. Elevación del texto de la Pestaña 2
+    if (entradaActual && entradaActual[1].el) {
+      entradaActual[1].el.classList.add("actualidad-salida-arriba");
+    }
+    if (cabecera) cabecera.classList.add("vista-oculta");
+    if (navNodosHome) navNodosHome.classList.add("vista-oculta");
+
+    await esperar(800);
+
+    if (entradaActual && entradaActual[1].el) {
+      entradaActual[1].el.classList.remove("actualidad-salida-arriba");
+      entradaActual[1].el.classList.add("vista-oculta");
+    }
+
+    vistaDestino.el.classList.remove("vista-oculta");
+    enTransicion = false;
+
+    // 4. Reproducir la película y al terminar reactivar cenizas y viajar a Inicio
+    reproducirCinematica(() => {
+      pausarCenizas(false);
+      vistaDestino.el.classList.add("vista-oculta");
+      navegarA("inicio");
+    });
+    return;
+  }
+
+  // Si salimos de la cinemática por cualquier vía, garantizamos cenizas activas
+  pausarCenizas(false);
+
+  const elCinematica = document.querySelector("#vista-cinematica");
+  if (elCinematica) elCinematica.classList.add("vista-oculta");
+
+  // Ráfaga normal para las demás transiciones
   dispararRafagaBelica();
 
-  // REGLA DE ORO DEL TELÓN NEGRO:
-  // Se activa ÚNICAMENTE en la Pestaña 2 ('actualidad').
-  // En Portada (1) e Inicio (3) se apaga, mostrando el Fondo A.
-  activarTelonNegro(nombreVista === "actualidad");
+  // Control del telón negro: solo activo en la Pestaña 2
+  if (nombreVista === "actualidad") {
+    fijarModoTelonNegro("parcial");
+  } else {
+    fijarModoTelonNegro("apagado");
+  }
 
   const origenEsEditorial = entradaActual
     ? entradaActual[1].dominio === "editorial"
@@ -113,11 +162,11 @@ export async function navegarA(nombreVista, conPreDelay = false) {
   const esViajeEditorial = origenEsEditorial && destinoEsEditorial;
 
   // -----------------------------------------------------------
-  // CANAL A: TRANSICIÓN ENTRE LAS PESTAÑAS DEL HOME (1, 2 y 3)
+  // CANAL A: TRANSICIÓN ENTRE PESTAÑAS DEL HOME (PORTADA / ACTUALIDAD / INICIO)
   // -----------------------------------------------------------
   if (esViajeEditorial) {
     if (conPreDelay) {
-      await esperar(500); // Calma tensa al pulsar "CONGRESO"
+      await esperar(500); // Calma previa al pulsar "CONGRESO"
     }
 
     if (entradaActual && entradaActual[1].el) {
@@ -128,16 +177,11 @@ export async function navegarA(nombreVista, conPreDelay = false) {
       elActual.classList.add("vista-oculta");
     }
 
-    // GESTIÓN DE VISIBILIDAD DE CONTROLES
-    // Pestañas 1 y 2 son limpias (sin cabecera). La cabecera solo se muestra en la Pestaña 3 (inicio)
     const esLimpia = nombreVista === "portada" || nombreVista === "actualidad";
     if (cabecera) cabecera.classList.toggle("vista-oculta", esLimpia);
-
-    // Los 3 círculos se ocultan en la portada y aparecen en Actualidad e Inicio
     if (navNodosHome)
       navNodosHome.classList.toggle("vista-oculta", nombreVista === "portada");
 
-    // Actualizamos cuál de los 3 círculos está activo
     if (nodoPortada)
       nodoPortada.classList.toggle("activo", nombreVista === "portada");
     if (nodoActualidad)
@@ -155,7 +199,7 @@ export async function navegarA(nombreVista, conPreDelay = false) {
     }
 
     // -----------------------------------------------------------
-    // CANAL B: TRANSICIÓN HACIA HERRAMIENTAS (CON OLEADA AL 85%)
+    // CANAL B: TRANSICIÓN OPERATIVA (HERRAMIENTAS CON OLEADA)
     // -----------------------------------------------------------
   } else {
     if (entradaActual && entradaActual[1].el) {
@@ -196,12 +240,12 @@ export async function navegarA(nombreVista, conPreDelay = false) {
         btnPizarra.classList.toggle("activo", nombreVista === "pizarra");
     }
 
-    await esperar(1600); // Esperar al 30% del reflujo marino
+    await esperar(1600); // Reflujo al 30%
 
     if (vistaDestino.el) {
       vistaDestino.el.classList.remove("vista-oculta");
       vistaDestino.el.classList.add("operativa-entrada-izquierda");
-      await esperar(1250); // Entrada lenta de los datos
+      await esperar(1250);
       vistaDestino.el.classList.remove("operativa-entrada-izquierda");
     }
   }
@@ -209,18 +253,18 @@ export async function navegarA(nombreVista, conPreDelay = false) {
   enTransicion = false;
 }
 
-// -------------------------------------------------------------
-// 5. OYENTES DE CONTROLES
-// -------------------------------------------------------------
+// =========================================================
+// 6. OYENTES DE EVENTOS Y BOTONES
+// =========================================================
 
-// Los 3 Círculos Anónimos del Home
+// Círculos anónimos del Home
 if (nodoPortada)
   nodoPortada.addEventListener("click", () => navegarA("portada"));
 if (nodoActualidad)
   nodoActualidad.addEventListener("click", () => navegarA("actualidad"));
 if (nodoInicio) nodoInicio.addEventListener("click", () => navegarA("inicio"));
 
-// Barra de Herramientas
+// Barra de herramientas superior
 if (btnVolverHome)
   btnVolverHome.addEventListener("click", () => navegarA("inicio"));
 if (btnExplorador)
@@ -237,7 +281,7 @@ if (btnPizarra) {
   });
 }
 
-// Disparador 1: Clic en "CONGRESO" (Viaja a Actualidad con pre-delay)
+// Disparador 1: "CONGRESO" (Viaja a Actualidad)
 const triggerCongreso = document.querySelector("#titulo-portada-trigger");
 if (triggerCongreso) {
   triggerCongreso.addEventListener("click", () => navegarA("actualidad", true));
@@ -249,19 +293,21 @@ if (triggerCongreso) {
   });
 }
 
-// Disparador 2: Clic en "ACTUALIDAD" (Viaja al Despacho/Inicio)
+// Disparador 2: "ACTUALIDAD" (Dispara la cinemática histórica)
 const triggerActualidad = document.querySelector("#trigger-actualidad");
 if (triggerActualidad) {
-  triggerActualidad.addEventListener("click", () => navegarA("inicio"));
+  triggerActualidad.addEventListener("click", () => navegarA("cinematica"));
   triggerActualidad.addEventListener("keydown", (e) => {
     if (e.key === "Enter" || e.key === " ") {
       e.preventDefault();
-      navegarA("inicio");
+      navegarA("cinematica");
     }
   });
 }
 
-// Arranque inicial en Portada limpia
+// =========================================================
+// 7. ESTADO INICIAL GARANTIZADO AL ENTRAR
+// =========================================================
 if (cabecera) cabecera.classList.add("vista-oculta");
 if (navNodosHome) navNodosHome.classList.add("vista-oculta");
 if (nodoPortada) nodoPortada.classList.add("activo");

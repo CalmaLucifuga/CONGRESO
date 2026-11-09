@@ -147,101 +147,263 @@
 }
 
 /* =========================================================
-   ACTO 2: PESTAÑA LIMPIA DE "ACTUALIDAD" (#vista-actualidad)
-   Diseñada para contrastar sobre el fondo negro exclusivo
+   ACTO 2: CRÓNICA HISTÓRICA (IZQUIERDA - MÁXIMO 58% DE ANCHO)
    ========================================================= */
 
-.pantalla-actualidad {
-  min-height: 85vh;
+.pantalla-actualidad.cronica-congreso {
+  min-height: 90vh;
+  /* Alineación estricta a la izquierda */
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  padding: 3rem 1.5rem;
-  user-select: none;
+  align-items: flex-start;
+  text-align: left;
+  
+  /* LÍMITE FÍSICO: Solo ocupa el 58% del ancho para no chocar con la marea */
+  max-width: 58%;
+  width: 58%;
+  padding: 3.5rem 0 5rem 0;
+  user-select: text; /* Permite seleccionar y leer el texto histórico cómodamente */
 }
 
 .actualidad-emblema-wrapper {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
 }
 
-.bloque-tesis-actualidad {
-  max-width: 680px;
-  margin-bottom: 3.5rem;
+
+/* =========================================================
+  HITOS TEMPORALES (ESPACIADO VERTICAL AMPLIADO)
+   ========================================================= */
+
+/* Mayor separación entre cada fecha para una lectura vertical pausada */
+.hito-cronica {
+  margin-bottom: 4.8rem;
+  position: relative;
 }
 
-.bloque-tesis-actualidad h2 {
+.hito-cronica {
+  margin-bottom: 4.8rem;
+  position: relative;
+
+}
+.ano-cronica {
   font-family: 'Raleway', sans-serif;
-  font-size: 2.2rem;
-  font-weight: 800;
-  color: #f5f2eb; /* Blanco marfil luminoso sobre el negro */
-  letter-spacing: -0.01em;
+  font-size: clamp(2rem, 3.8vw, 2.8rem);
+  font-weight: 900;
+  color: #f5f2eb;
+  letter-spacing: 0.04em;
+  line-height: 1.1;
   margin-bottom: 1rem;
 }
 
-.parrafo-actualidad {
+/* Párrafos explicativos */
+.texto-cronica {
+  font-family: system-ui, -apple-system, sans-serif;
   color: #c4b5a5;
-  font-size: 1.1rem;
-  line-height: 1.7;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  margin-bottom: 0.75rem;
 }
 
-/* El disparador monumental "ACTUALIDAD" */
-.bloque-trigger-actualidad {
+.texto-cronica .ley-cita {
+  color: #f5f2eb;
+  font-style: italic;
+  font-weight: 600;
+}
+
+/* Cita destacada */
+.cita-dictamen {
+  border-left: 2px solid #8c2d19;
+  padding: 0.6rem 0 0.6rem 1.4rem;
+  margin: 1.5rem 0;
+  background: rgba(140, 45, 25, 0.08);
+  border-radius: 0 6px 6px 0;
+}
+
+.cita-dictamen p {
+  font-size: 0.95rem;
+  color: #a89685;
+  line-height: 1.55;
+  margin-bottom: 0.4rem;
+}
+
+.dictamen-mayuscula {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
+  color: #f5f2eb !important;
+  line-height: 1.55;
+}
+
+/* =========================================================
+   HITO 1987: FOTO CON EFECTO "STICKER" (SIN CAJA CUADRADA)
+   ========================================================= */
+
+.hito-con-foto {
+  display: grid;
+  grid-template-columns: 1fr 190px;
+  gap: 2rem;
+  align-items: center;
+}
+
+.espacio-foto-relieve {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.8rem;
-  margin-top: 1rem;
+  gap: 0.6rem;
 }
 
+/* ELIMINAMOS EL CUADRADO: contenedor totalmente transparente y libre */
+.marco-foto-historica {
+  width: 180px;
+  height: auto;
+  min-height: 120px;
+  background: transparent; /* Cero fondo negro */
+  border: none;             /* Cero bordes cuadrados */
+  box-shadow: none;         /* Cero sombra de caja */
+  overflow: visible;        /* Permite que el sticker flote libre */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* LA IMAGEN EN FORMATO STICKER */
+.img-historica {
+  width: 100%;
+  height: auto;
+  max-height: 150px;
+  object-fit: contain;
+  
+  /* Sombra proyectada que bordea la silueta física del PNG (no el cuadrado) */
+  filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.75))
+          drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
+  
+  /* Leve inclinación orgánica como recorte pegado en el expediente */
+  transform: rotate(-3.5deg);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.3, 1), filter 0.3s ease;
+}
+
+/* Efecto al pasar el ratón: el sticker se endereza e intensifica su sombra */
+.img-historica:hover {
+  transform: rotate(0deg) scale(1.08);
+  filter: drop-shadow(0 18px 25px rgba(0, 0, 0, 0.9))
+          drop-shadow(0 0 12px rgba(225, 75, 20, 0.3));
+}
+
+.foto-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.75rem;
+  color: #8c735d;
+  font-size: 0.72rem;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  gap: 0.4rem;
+  border: 1px dashed rgba(197, 178, 138, 0.3);
+  border-radius: 8px;
+}
+
+.icono-placeholder {
+  font-size: 1.8rem;
+}
+
+.pie-foto-historica {
+  font-size: 0.72rem;
+  color: #8c735d;
+  font-family: 'Raleway', sans-serif;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+/* =========================================================
+   DISPARADOR FINAL "ACTUALIDAD" (REDUCIDO Y CONTROLADO)
+   ========================================================= */
+
+.bloque-trigger-actualidad {
+  width: 100%;
+  margin-top: 2rem;
+  padding-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.linea-cierre-cronica {
+  width: 100%;
+  height: 1px;
+  background: rgba(197, 178, 138, 0.22);
+  margin-bottom: 1.5rem;
+}
+
+/* Escala reducida para "ACTUALIDAD": ya no satura la pantalla */
 .titulo-actualidad-interactivo {
   font-family: 'Raleway', sans-serif;
-  font-size: clamp(3.2rem, 10vw, 6.5rem);
+  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
   font-weight: 900;
-  line-height: 0.9;
-  letter-spacing: 0.18em;
-  text-indent: 0.18em;
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-indent: 0.14em;
   text-transform: uppercase;
   color: #f5f2eb;
   cursor: pointer;
-  transition: transform 0.3s cubic-bezier(0.2, 0.4, 0.3, 1), 
-              color 0.3s ease, 
-              text-shadow 0.3s ease;
+  transition: color 0.3s ease, transform 0.3s ease;
   outline: none;
 }
 
-/* Efecto al pasar el ratón: destello cálido de fuego */
 .titulo-actualidad-interactivo:hover {
-  transform: scale(1.03);
-  color: #facc15; /* Oro ámbar incandescente */
-  text-shadow: 0 0 25px rgba(250, 204, 21, 0.45);
-}
-
-.titulo-actualidad-interactivo:focus-visible {
-  outline: 2px dashed #facc15;
-  outline-offset: 10px;
+  color: #facc15; /* Oro ámbar al pasar el ratón */
+  transform: translateX(6px);
 }
 
 .indicador-ingreso-actualidad {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.6rem;
   font-family: 'Raleway', sans-serif;
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.22em;
-  color: #a89685;
+  letter-spacing: 0.2em;
+  color: #8c735d;
   cursor: pointer;
-  transition: color 0.2s ease;
 }
 
-.titulo-actualidad-interactivo:hover ~ .indicador-ingreso-actualidad,
 .indicador-ingreso-actualidad:hover {
   color: #facc15;
+}
+
+/* Adaptación móvil */
+@media (max-width: 850px) {
+  .pantalla-actualidad.cronica-congreso {
+    max-width: 100%;
+    width: 100%;
+    padding: 2rem 0;
+  }
+
+  .hito-con-foto {
+    grid-template-columns: 1fr; /* En móvil la foto se coloca abajo del texto de 1987 */
+    gap: 1rem;
+  }
+
+  .marco-foto-historica {
+    width: 100%;
+    max-width: 220px;
+    height: 130px;
+  }
+
+  .ano-cronica {
+    font-size: 2rem;
+  }
+
+  .titulo-actualidad-interactivo {
+    font-size: 2.2rem;
+    letter-spacing: 0.08em;
+  }
 }
 
 .titulo-monumental-portada:hover ~ .indicador-ingreso,
@@ -257,6 +419,27 @@
 
 .indicador-ingreso:hover .flecha-ingreso {
   transform: translateX(4px);
+}
+
+/* =========================================================
+   ANIMACIÓN DE ELEVACIÓN HACIA EL ABISMO (PESTAÑA 2 ➔ CINEMÁTICA)
+   ========================================================= */
+
+.actualidad-salida-arriba {
+  /* El contenido sube verticalmente con inercia continua */
+  animation: elevacionHaciaAbismo 0.85s cubic-bezier(0.4, 0, 0.2, 1) forwards !important;
+  pointer-events: none;
+  will-change: transform;
+}
+
+@keyframes elevacionHaciaAbismo {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  100% {
+    /* Sube completamente perdiéndose por la parte superior */
+    transform: translate3d(0, -115vh, 0);
+  }
 }
 
 /* =========================================================
