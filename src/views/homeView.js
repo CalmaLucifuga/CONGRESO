@@ -25,6 +25,13 @@ export function inicializarInicio() {
     contenedorActualidad.innerHTML = `
       <section class="pantalla-actualidad cronica-congreso">
         
+        <!-- BANCO DE HUMO PERMANENTE DE LECTURA (Exclusivo de esta pestaña) -->
+        <div class="banco-humo-lectura" aria-hidden="true">
+          <div class="humo-nube-foco nube-foco-1"></div>
+          <div class="humo-nube-foco nube-foco-2"></div>
+          <div class="humo-nube-foco nube-foco-3"></div>
+        </div>
+
         <!-- Distintivo superior -->
         <div class="actualidad-emblema-wrapper">
           <span class="emblema-punto"></span>
@@ -105,13 +112,17 @@ export function inicializarInicio() {
   // 2. ACTO 3 (PESTAÑA 3): DÍPTICO CONTENIDO (IZQUIERDA Y DERECHA)
   // Con ancho acotado, márgenes y cubículo con blur
   // =============================================================
+  // =============================================================
+  // ACTO 3 (PESTAÑA 3): PANELES ESPEJO IDÉNTICOS EN DIMENSIONES
+  // Izquierda: Imagen del documento | Derecha: Recuadro con blur gemelo
+  // =============================================================
   if (contenedorInicio) {
     contenedorInicio.innerHTML = `
       <section class="seccion-inicio escaparate-split-layout">
         <div class="split-contenedor-editorial">
           
-          <!-- MITAD IZQUIERDA: Imagen con botón "VER AQUÍ" -->
-          <div class="columna-split columna-imagen-preview">
+          <!-- LADO IZQUIERDO: Imagen del documento con botón "VER AQUÍ" -->
+          <div class="panel-espejo panel-espejo-imagen">
             <img 
               src="${doc1.miniatura || "/fondos/24000001-large.png"}" 
               alt="${doc1.titulo}" 
@@ -131,9 +142,9 @@ export function inicializarInicio() {
             </div>
           </div>
 
-          <!-- MITAD DERECHA: Cubículo con fondo blur y descripción -->
-          <div class="columna-split columna-datos-blur">
-            <div class="tarjeta-blur-contenido">
+          <!-- LADO DERECHO: Recuadro con Blur GEMELO en altura y anchura -->
+          <div class="panel-espejo panel-espejo-blur">
+            <div class="contenido-panel-blur">
               <span class="badge-split-editorial">DOCUMENTO I — ARCHIVO CENTRAL</span>
               <h2 class="titulo-split-editorial">VER PRIMERO</h2>
               <div class="linea-adorno-split"></div>
@@ -155,4 +166,38 @@ export function inicializarInicio() {
       </section>
     `;
   }
-}
+
+  // =============================================================
+  // SINCRONIZACIÓN ESPEJO 100% PARA MÓVIL (ResizeObserver nativo)
+  // Iguala la altura del recuadro con blur a la altura exacta de la foto
+  // =============================================================
+  const panelImg = contenedorInicio.querySelector(".panel-espejo-imagen");
+  const panelBlur = contenedorInicio.querySelector(".panel-espejo-blur");
+  const imgElemento = panelImg
+    ? panelImg.querySelector(".img-split-ensayo")
+    : null;
+
+  if (panelImg && panelBlur && window.ResizeObserver) {
+    const sincronizador = new ResizeObserver(() => {
+      if (window.innerWidth <= 850) {
+        // En móvil: el recuadro con blur clona la altura exacta de la imagen
+        const alturaRealFoto = panelImg.getBoundingClientRect().height;
+        if (alturaRealFoto > 50) {
+          panelBlur.style.height = `${alturaRealFoto}px`;
+        }
+      } else {
+        // En PC: dejamos que el CSS Grid gobierne el 50/50 normal
+        panelBlur.style.height = "";
+      }
+    });
+
+    sincronizador.observe(panelImg);
+    if (imgElemento) {
+      imgElemento.addEventListener("load", () => {
+        if (window.innerWidth <= 850) {
+          panelBlur.style.height = `${panelImg.getBoundingClientRect().height}px`;
+        }
+      });
+    }
+  }
+} // <-- Fin de inicializarInicio

@@ -168,8 +168,12 @@ main {
 }
 
 .icono-lupa-cabecera {
-  font-size: 0.85rem;
-  opacity: 0.6;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  opacity: 0.65;
+  flex-shrink: 0;
+  display: block;
 }
 
 #input-buscador-cabecera {
@@ -362,5 +366,262 @@ main {
     width: 100%;
     right: auto;
     left: 0;
+  }
+}
+
+/* =========================================================
+   ESTILOS PARA LOS BOTONES DE ICONO MÓVIL
+   ========================================================= */
+
+.btn-icono-cabecera-movil {
+  display: none; /* En PC están ocultos */
+  background: transparent;
+  border: none;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+}
+
+.icono-img-cabecera {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  display: block;
+}
+
+.icono-fallback-cabecera {
+  font-size: 1.2rem;
+  color: #111111;
+}
+
+/* Telón de fondo oscuro para cerrar al tocar fuera */
+.backdrop-movil-panel {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 120;
+  transition: opacity 0.3s ease;
+}
+
+/* =========================================================
+   CAJONES DESLIZANTES MÓVILES (DRAWERS)
+   ========================================================= */
+
+.drawer-panel {
+  position: fixed;
+  top: 0;
+  height: 100vh;
+  z-index: 130;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+/* 1. Cajón Izquierdo: Menú con fondo en BLUR */
+.drawer-panel-izquierdo {
+  left: 0;
+  width: 82vw;
+  max-width: 320px;
+  background: rgba(251, 246, 236, 0.82); /* Fondo crema translúcido */
+  backdrop-filter: blur(20px);          /* BLUR pronunciado */
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid rgba(140, 110, 80, 0.25);
+  padding: 1.5rem;
+}
+
+.drawer-header-interior {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid rgba(140, 110, 80, 0.2);
+  padding-bottom: 1rem;
+}
+
+.drawer-etiqueta {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  color: #040000;
+}
+
+.btn-cerrar-x {
+  background: transparent;
+  border: none;
+  font-size: 1.3rem;
+  color: #1a1a1a;
+  cursor: pointer;
+  padding: 0.2rem;
+}
+
+.nav-drawer-links {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.link-drawer-item {
+  background: transparent;
+  border: none;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #1a1a1a;
+  text-align: left;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.link-drawer-item:hover {
+  color: #8c2d19;
+  transform: translateX(4px);
+}
+
+/* 2. Cajón Derecho: Buscador estilo foto de referencia */
+.drawer-panel-derecho {
+  right: 0;
+  width: 90vw;
+  max-width: 420px;
+  background: #ffffff; /* Blanco limpio como en la foto */
+  border-left: 1px solid #e4e4e7;
+  padding: 1.25rem;
+}
+
+.drawer-buscador-barra {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+}
+
+.caja-search-estilo-ref {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1.5px solid #18181b; /* Línea de búsqueda inferior */
+  padding-bottom: 0.5rem;
+}
+
+.icono-lupa-ref {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  opacity: 0.65;
+  flex-shrink: 0;
+  display: block;
+}
+
+#input-buscador-drawer {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #18181b;
+  width: 100%;
+}
+
+.btn-cerrar-circular {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #f4f4f5;
+  border: none;
+  font-size: 0.85rem;
+  color: #18181b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.btn-cerrar-circular:hover {
+  background: #e4e4e7;
+}
+
+.etiqueta-populares {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: #71717a;
+  margin-bottom: 1rem;
+}
+
+.contenedor-resultados-drawer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+.item-sugerencia-drawer {
+  padding: 0.6rem 0;
+  border-bottom: 1px solid #f4f4f5;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  color: #18181b;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+.item-sugerencia-drawer:hover {
+  color: #8c2d19;
+}
+
+/* =========================================================
+   ADAPTACIÓN RESPONSIVE DE LA CABECERA
+   ========================================================= */
+
+@media (max-width: 850px) {
+  .cabecera-blanca-editorial {
+    height: 56px;
+    padding: 0;
+  }
+
+  /* Distribución exacta: [3-rayas] --- [CONGRESO] --- [Lupa] */
+  .fila-cabecera-tres-columnas {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1rem;
+  }
+
+  .btn-icono-cabecera-movil {
+    display: flex; /* Activamos los iconos en móvil */
+  }
+
+  .nav-izquierda-funciones,
+  .utilidad-derecha-buscador {
+    display: none !important; /* Ocultamos los menús de PC en móvil */
+  }
+
+  .logo-centro-cabecera .logo-congreso-marca {
+    font-size: 1.2rem;
+    letter-spacing: 0.18em;
   }
 }

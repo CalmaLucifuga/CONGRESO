@@ -31,7 +31,6 @@ const FRAGMENT_SHADER_SRC = `
   uniform vec2 u_tex_base_size;
   uniform vec2 u_tex_liquid_size;
 
-  // Algoritmo Cover Universal con Clamping de Seguridad
   vec2 getCoverUV(vec2 uv, vec2 screenRes, vec2 texRes, float zoomFactor, float offsetY) {
     vec2 s = max(screenRes, vec2(1.0, 1.0));
     vec2 i = max(texRes, vec2(1.0, 1.0));
@@ -57,7 +56,7 @@ const FRAGMENT_SHADER_SRC = `
     vec2 uv = v_uv;
     bool esMovil = u_resolution.x < u_resolution.y;
 
-    float zoomBase = esMovil ? 1.50 : 1.0;
+    float zoomBase = esMovil ? 1.60 : 1.0;
     vec2 uvBase = getCoverUV(uv, u_resolution, u_tex_base_size, zoomBase, 0.0);
 
     float zoomMarea = esMovil ? 2.35 : 1.0;
@@ -66,7 +65,7 @@ const FRAGMENT_SHADER_SRC = `
     uvBase.y = clamp(uvBase.y + (u_scroll_progress - 0.5) * 0.08, 0.002, 0.998);
     uvLiquid.y = clamp(uvLiquid.y + (u_scroll_progress - 0.5) * 0.10, 0.002, 0.998);
 
-    // 1. FISICA DE LA MAREA (DERECHA A IZQUIERDA)
+    // 1. FISICA DE LA MAREA
     float tiempoMarea = u_time * 0.75;
     float vaivenMarea = pow(sin(tiempoMarea) * 0.5 + 0.5, 0.85);
 
@@ -83,7 +82,7 @@ const FRAGMENT_SHADER_SRC = `
     float distOrilla = uv.x - xOrilla;
     float factorAgua = smoothstep(-0.008, 0.008, distOrilla);
 
-    // 2. FONDO A (BASE) Y AVANCE DEL TELON NEGRO
+    // 2. FONDO A Y AVANCE DEL TELON NEGRO
     vec4 texColorBase = texture2D(u_tex_base, uvBase);
     vec3 colorBaseLuz = texColorBase.rgb;
 
@@ -121,7 +120,7 @@ const FRAGMENT_SHADER_SRC = `
     vec3 colorComposicion = mix(colorBaseConTelon, colorAguaConTelon, factorAgua);
     vec3 colorMezcla = mix(colorComposicion, colorEspumaSuave, bordeOrilla * factorAgua * (1.0 - factorNegro));
 
-    // 4. SALIDA Y SATURACION (DECLARADA UNA SOLA VEZ)
+    // 4. SATURACIÓN
     float saturacion = 1.15;
     float luminancia = dot(colorMezcla, vec3(0.299, 0.587, 0.114));
     vec3 colorSalidaFinal = mix(vec3(luminancia), colorMezcla, saturacion);
@@ -157,194 +156,230 @@ function smootherstep(x) {
   return c * c * c * (c * (c * 6 - 15) + 10);
 }
 
+/**
+ * Inicia el fondo inmersivo y retorna una Promesa que se resuelve
+ * cuando AMBAS texturas han sido cargadas en la GPU.
+ */
 export function iniciarFondoInmersivo() {
-  if (document.querySelector("#canvas-inmersivo")) return;
-
-  const canvas = document.createElement("canvas");
-  canvas.id = "canvas-inmersivo";
-  document.body.prepend(canvas);
-
-  const gl =
-    canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-  if (!gl) return;
-
-  function compilarShader(tipo, codigo) {
-    const shader = gl.createShader(tipo);
-    gl.shaderSource(shader, codigo);
-    gl.compileShader(shader);
-    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-      console.error("Error al compilar Shader:", gl.getShaderInfoLog(shader));
-      gl.deleteShader(shader);
-      return null;
+  return new Promise((resolvePadre) => {
+    if (document.querySelector("#canvas-inmersivo")) {
+      resolvePadre();
+      return;
     }
-    return shader;
-  }
 
-  const vertShader = compilarShader(gl.VERTEX_SHADER, VERTEX_SHADER_SRC);
-  const fragShader = compilarShader(gl.FRAGMENT_SHADER, FRAGMENT_SHADER_SRC);
-  if (!vertShader || !fragShader) return;
+    const canvas = document.createElement("canvas");
+    canvas.id = "canvas-inmersivo";
+    document.body.prepend(canvas);
 
-  const programa = gl.createProgram();
-  gl.attachShader(programa, vertShader);
-  gl.attachShader(programa, fragShader);
-  gl.linkProgram(programa);
-  if (!gl.getProgramParameter(programa, gl.LINK_STATUS)) {
-    console.error(
-      "Error al enlazar programa WebGL:",
-      gl.getProgramInfoLog(programa),
-    );
-    return;
-  }
-  gl.useProgram(programa);
+    const gl =
+      canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    if (!gl) {
+      console.warn("WebGL no disponible; manteniendo fondo estático.");
+      resolvePadre();
+      return;
+    }
 
-  const vertices = new Float32Array([
-    -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0,
-  ]);
-  const buffer = gl.createBuffer();
-  gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-  gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+    function compilarShader(tipo, codigo) {
+      const shader = gl.createShader(tipo);
+      gl.shaderSource(shader, codigo);
+      gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+        console.error("Error al compilar Shader:", gl.getShaderInfoLog(shader));
+        gl.deleteShader(shader);
+        return null;
+      }
+      return shader;
+    }
 
-  const posAttr = gl.getAttribLocation(programa, "a_position");
-  gl.enableVertexAttribArray(posAttr);
-  gl.vertexAttribPointer(posAttr, 2, gl.FLOAT, false, 0, 0);
+    const vertShader = compilarShader(gl.VERTEX_SHADER, VERTEX_SHADER_SRC);
+    const fragShader = compilarShader(gl.FRAGMENT_SHADER, FRAGMENT_SHADER_SRC);
+    if (!vertShader || !fragShader) {
+      resolvePadre();
+      return;
+    }
 
-  const uTimeLoc = gl.getUniformLocation(programa, "u_time");
-  const uScrollProgLoc = gl.getUniformLocation(programa, "u_scroll_progress");
-  const uLimiteMareaLoc = gl.getUniformLocation(programa, "u_limite_marea");
-  const uTelonProgLoc = gl.getUniformLocation(programa, "u_telon_progreso");
-  const uResLoc = gl.getUniformLocation(programa, "u_resolution");
-  const uTexBaseLoc = gl.getUniformLocation(programa, "u_tex_base");
-  const uTexLiquidLoc = gl.getUniformLocation(programa, "u_tex_liquid");
-  const uTexBaseSizeLoc = gl.getUniformLocation(programa, "u_tex_base_size");
-  const uTexLiquidSizeLoc = gl.getUniformLocation(
-    programa,
-    "u_tex_liquid_size",
-  );
+    const programa = gl.createProgram();
+    gl.attachShader(programa, vertShader);
+    gl.attachShader(programa, fragShader);
+    gl.linkProgram(programa);
+    if (!gl.getProgramParameter(programa, gl.LINK_STATUS)) {
+      resolvePadre();
+      return;
+    }
+    gl.useProgram(programa);
 
-  function redimensionar() {
-    const dpr = Math.min(
-      window.devicePixelRatio || 1,
-      window.innerWidth < 850 ? 1.25 : 1.5,
-    );
-    canvas.width = Math.floor(window.innerWidth * dpr);
-    canvas.height = Math.floor(window.innerHeight * dpr);
-    gl.viewport(0, 0, canvas.width, canvas.height);
-    gl.uniform2f(uResLoc, canvas.width, canvas.height);
-  }
-  window.addEventListener("resize", redimensionar);
-  redimensionar();
+    const vertices = new Float32Array([
+      -1.0, -1.0, 1.0, -1.0, -1.0, 1.0, 1.0, 1.0,
+    ]);
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
-  gl.uniform2f(uTexBaseSizeLoc, 1920.0, 1080.0);
-  gl.uniform2f(uTexLiquidSizeLoc, 1920.0, 1080.0);
-  gl.uniform1f(uLimiteMareaLoc, 0.395);
-  gl.uniform1f(uTelonProgLoc, 0.0);
+    const posAttr = gl.getAttribLocation(programa, "a_position");
+    gl.enableVertexAttribArray(posAttr);
+    gl.vertexAttribPointer(posAttr, 2, gl.FLOAT, false, 0, 0);
 
-  function cargarTextura(unidad, url, fallbackUrl, uSamplerLoc, uSizeLoc) {
-    const tex = gl.createTexture();
-    gl.activeTexture(unidad);
-    gl.bindTexture(gl.TEXTURE_2D, tex);
-    gl.texImage2D(
-      gl.TEXTURE_2D,
-      0,
-      gl.RGBA,
-      1,
-      1,
-      0,
-      gl.RGBA,
-      gl.UNSIGNED_BYTE,
-      new Uint8Array([247, 243, 238, 255]),
+    const uTimeLoc = gl.getUniformLocation(programa, "u_time");
+    const uScrollProgLoc = gl.getUniformLocation(programa, "u_scroll_progress");
+    const uLimiteMareaLoc = gl.getUniformLocation(programa, "u_limite_marea");
+    const uTelonProgLoc = gl.getUniformLocation(programa, "u_telon_progreso");
+    const uResLoc = gl.getUniformLocation(programa, "u_resolution");
+    const uTexBaseLoc = gl.getUniformLocation(programa, "u_tex_base");
+    const uTexLiquidLoc = gl.getUniformLocation(programa, "u_tex_liquid");
+    const uTexBaseSizeLoc = gl.getUniformLocation(programa, "u_tex_base_size");
+    const uTexLiquidSizeLoc = gl.getUniformLocation(
+      programa,
+      "u_tex_liquid_size",
     );
 
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.src = url;
-
-    img.onload = () => {
-      gl.activeTexture(unidad);
-      gl.bindTexture(gl.TEXTURE_2D, tex);
-      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-      gl.uniform2f(
-        uSizeLoc,
-        img.naturalWidth || 1920,
-        img.naturalHeight || 1080,
+    function redimensionar() {
+      const dpr = Math.min(
+        window.devicePixelRatio || 1,
+        window.innerWidth < 850 ? 1.25 : 1.5,
       );
-    };
+      canvas.width = Math.floor(window.innerWidth * dpr);
+      canvas.height = Math.floor(window.innerHeight * dpr);
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform2f(uResLoc, canvas.width, canvas.height);
+    }
+    window.addEventListener("resize", redimensionar);
+    redimensionar();
 
-    img.onerror = () => {
-      // Intento inteligente de reemplazo de extensión si la ruta era errónea
-      if (img.src.includes(".png")) {
-        img.src = url.replace(".png", ".jpg");
-      } else if (img.src.includes(".jpg")) {
-        img.src = url.replace(".jpg", ".png");
-      } else if (fallbackUrl && img.src !== fallbackUrl) {
-        img.src = fallbackUrl;
-      }
-    };
+    gl.uniform2f(uTexBaseSizeLoc, 1920.0, 1080.0);
+    gl.uniform2f(uTexLiquidSizeLoc, 1920.0, 1080.0);
+    gl.uniform1f(uLimiteMareaLoc, 0.395);
+    gl.uniform1f(uTelonProgLoc, 0.0);
 
-    const unidadIndex = unidad - gl.TEXTURE0;
-    gl.uniform1i(uSamplerLoc, unidadIndex);
-  }
+    // Carga de textura convertida en promesa
+    function cargarTexturaPromesa(
+      unidad,
+      url,
+      fallbackUrl,
+      uSamplerLoc,
+      uSizeLoc,
+    ) {
+      return new Promise((resolve) => {
+        const tex = gl.createTexture();
+        gl.activeTexture(unidad);
+        gl.bindTexture(gl.TEXTURE_2D, tex);
+        gl.texImage2D(
+          gl.TEXTURE_2D,
+          0,
+          gl.RGBA,
+          1,
+          1,
+          0,
+          gl.RGBA,
+          gl.UNSIGNED_BYTE,
+          new Uint8Array([247, 243, 238, 255]),
+        );
 
-  cargarTextura(
-    gl.TEXTURE0,
-    RUTA_IMAGEN_BASE,
-    "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=1600&auto=format&fit=crop",
-    uTexBaseLoc,
-    uTexBaseSizeLoc,
-  );
-  cargarTextura(
-    gl.TEXTURE1,
-    RUTA_IMAGEN_MAREA,
-    "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1600&auto=format&fit=crop",
-    uTexLiquidLoc,
-    uTexLiquidSizeLoc,
-  );
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.src = url;
 
-  let scrollProgresoActual = 0.0;
-  let tiempoInicio = performance.now();
+        img.onload = () => {
+          gl.activeTexture(unidad);
+          gl.bindTexture(gl.TEXTURE_2D, tex);
+          gl.texImage2D(
+            gl.TEXTURE_2D,
+            0,
+            gl.RGBA,
+            gl.RGBA,
+            gl.UNSIGNED_BYTE,
+            img,
+          );
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+          gl.uniform2f(
+            uSizeLoc,
+            img.naturalWidth || 1920,
+            img.naturalHeight || 1080,
+          );
+          resolve();
+        };
 
-  suscribirScroll((estado) => {
-    scrollProgresoActual = estado.progreso;
-  });
+        img.onerror = () => {
+          if (img.src.includes(".png")) {
+            img.src = url.replace(".png", ".jpg");
+          } else if (img.src.includes(".jpg")) {
+            img.src = url.replace(".jpg", ".png");
+          } else if (fallbackUrl && img.src !== fallbackUrl) {
+            img.src = fallbackUrl;
+          } else {
+            resolve(); // Continuar aunque falle el fallback
+          }
+        };
 
-  function renderizar(tiempoActual) {
-    const segundos = (tiempoActual - tiempoInicio) * 0.001;
-
-    telonProgresoActual += (telonActivoMeta - telonProgresoActual) * 0.055;
-
-    let limiteActual = 0.395;
-
-    if (oleadaActiva) {
-      const transcurrido = tiempoActual - tiempoInicioOleada;
-      const p = transcurrido / DURACION_OLEADA_MS;
-
-      if (p >= 1.0) {
-        oleadaActiva = false;
-        limiteActual = 0.395;
-      } else if (p < 0.42) {
-        const x = p / 0.42;
-        limiteActual = 0.395 + smootherstep(x) * (0.85 - 0.395);
-      } else if (p < 0.76) {
-        const x = (p - 0.42) / (0.76 - 0.42);
-        limiteActual = 0.85 - smootherstep(x) * (0.85 - 0.3);
-      } else {
-        const x = (p - 0.76) / (1.0 - 0.76);
-        limiteActual = 0.3 + smootherstep(x) * (0.395 - 0.3);
-      }
+        const unidadIndex = unidad - gl.TEXTURE0;
+        gl.uniform1i(uSamplerLoc, unidadIndex);
+      });
     }
 
-    gl.uniform1f(uTimeLoc, segundos);
-    gl.uniform1f(uScrollProgLoc, scrollProgresoActual);
-    gl.uniform1f(uLimiteMareaLoc, limiteActual);
-    gl.uniform1f(uTelonProgLoc, telonProgresoActual);
+    const pTexBase = cargarTexturaPromesa(
+      gl.TEXTURE0,
+      RUTA_IMAGEN_BASE,
+      "https://images.unsplash.com/photo-1586075010923-2dd4570fb338?w=1600&auto=format&fit=crop",
+      uTexBaseLoc,
+      uTexBaseSizeLoc,
+    );
+    const pTexMarea = cargarTexturaPromesa(
+      gl.TEXTURE1,
+      RUTA_IMAGEN_MAREA,
+      "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=1600&auto=format&fit=crop",
+      uTexLiquidLoc,
+      uTexLiquidSizeLoc,
+    );
 
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    // Cuando ambas texturas estén listas, notificamos al sistema
+    Promise.all([pTexBase, pTexMarea]).then(() => {
+      resolvePadre();
+    });
+
+    let scrollProgresoActual = 0.0;
+    let tiempoInicio = performance.now();
+
+    suscribirScroll((estado) => {
+      scrollProgresoActual = estado.progreso;
+    });
+
+    function renderizar(tiempoActual) {
+      const segundos = (tiempoActual - tiempoInicio) * 0.001;
+
+      telonProgresoActual += (telonActivoMeta - telonProgresoActual) * 0.055;
+
+      let limiteActual = 0.395;
+
+      if (oleadaActiva) {
+        const transcurrido = tiempoActual - tiempoInicioOleada;
+        const p = transcurrido / DURACION_OLEADA_MS;
+
+        if (p >= 1.0) {
+          oleadaActiva = false;
+          limiteActual = 0.395;
+        } else if (p < 0.42) {
+          const x = p / 0.42;
+          limiteActual = 0.395 + smootherstep(x) * (0.85 - 0.395);
+        } else if (p < 0.76) {
+          const x = (p - 0.42) / (0.76 - 0.42);
+          limiteActual = 0.85 - smootherstep(x) * (0.85 - 0.3);
+        } else {
+          const x = (p - 0.76) / (1.0 - 0.76);
+          limiteActual = 0.3 + smootherstep(x) * (0.395 - 0.3);
+        }
+      }
+
+      gl.uniform1f(uTimeLoc, segundos);
+      gl.uniform1f(uScrollProgLoc, scrollProgresoActual);
+      gl.uniform1f(uLimiteMareaLoc, limiteActual);
+      gl.uniform1f(uTelonProgLoc, telonProgresoActual);
+
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      requestAnimationFrame(renderizar);
+    }
+
     requestAnimationFrame(renderizar);
-  }
-
-  requestAnimationFrame(renderizar);
+  });
 }

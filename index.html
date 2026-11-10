@@ -9,34 +9,41 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;700;900&display=swap" rel="stylesheet" />
+
   </head>
   <body>
 
     <!-- 1. ESCENARIO DE FONDO ARTÍSTICO (Viento, humo denso, chispas) -->
     <div id="escenario-artistico" aria-hidden="true"></div>
 
-    <!-- 2. CABECERA EDITORIAL BLANCA (Estilo 3 Columnas) -->
+    <!-- 2. CABECERA BLANCA EDITORIAL (ADAPTATIVA PC / MÓVIL) -->
     <header id="cabecera-principal" class="cabecera-blanca-editorial vista-oculta">
       <div class="fila-cabecera-tres-columnas">
         
-        <!-- Izquierda: Navegación de funciones -->
+        <!-- BOTÓN HAMBURGUESA MÓVIL (Solo visible en pantallas pequeñas) -->
+        <button id="btn-hamburguesa-movil" class="btn-icono-cabecera-movil" title="Abrir Menú" aria-label="Abrir Menú">
+          <img src="/fondos/3-rayas.png" alt="Menú" class="icono-img-cabecera" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+          <span class="icono-fallback-cabecera" style="display: none;">☰</span>
+        </button>
+
+        <!-- NAVEGACIÓN PC (Izquierda) -->
         <nav class="nav-izquierda-funciones">
           <button id="btn-volver-home" class="link-nav-cabecera activo">ARCHIVO</button>
           <button id="btn-explorador" class="link-nav-cabecera">DOCUMENTOS</button>
           <button id="btn-pizarra" class="link-nav-cabecera">PIZARRA</button>
         </nav>
 
-        <!-- Centro: Logotipo de marca "CONGRESO" -->
+        <!-- CENTRO: Logotipo "CONGRESO" -->
         <div class="logo-centro-cabecera">
           <span id="logo-nav-congreso" class="logo-congreso-marca" role="button" tabindex="0" title="Volver a Portada">
             CONGRESO
           </span>
         </div>
 
-        <!-- Derecha: Buscador integrado in situ -->
+        <!-- BUSCADOR PC (Derecha) -->
         <div class="utilidad-derecha-buscador">
           <div class="caja-input-busqueda">
-            <span class="icono-lupa-cabecera">🔍</span>
+            <img src="/fondos/lupa.png" alt="Buscar" class="icono-lupa-cabecera" />
             <input 
               type="search" 
               id="input-buscador-cabecera" 
@@ -44,13 +51,58 @@
               autocomplete="off"
             />
           </div>
-
-          <!-- Desplegable con resultados de búsqueda en vivo -->
           <div id="dropdown-resultados-cabecera" class="resultados-busqueda-flotante vista-oculta"></div>
         </div>
 
+        <!-- BOTÓN LUPA MÓVIL (Solo visible en pantallas pequeñas) -->
+        <button id="btn-lupa-movil" class="btn-icono-cabecera-movil" title="Buscar" aria-label="Buscar">
+          <img src="/fondos/lupa.png" alt="Buscar" class="icono-img-cabecera" />
+        </button>
+
       </div>
     </header>
+
+    <!-- TELÓN DE CIERRE AL TOCAR FUERA (Para cerrar los cajones móviles) -->
+    <div id="backdrop-movil" class="backdrop-movil-panel vista-oculta"></div>
+
+    <!-- 1. CAJÓN IZQUIERDO MÓVIL: Atajos con fondo en BLUR -->
+    <aside id="drawer-menu-movil" class="drawer-panel drawer-panel-izquierdo vista-oculta">
+      <div class="drawer-header-interior">
+        <span class="drawer-etiqueta">NAVEGACIÓN</span>
+        <button id="btn-cerrar-menu-movil" class="btn-cerrar-x" title="Cerrar">✕</button>
+      </div>
+      <nav class="nav-drawer-links">
+        <button id="btn-movil-home" class="link-drawer-item">ARCHIVO CENTRAL —</button>
+        <button id="btn-movil-explorador" class="link-drawer-item">DOCUMENTOS —</button>
+        <button id="btn-movil-pizarra" class="link-drawer-item">PIZARRA —</button>
+      </nav>
+    </aside>
+
+    <!-- 2. CAJÓN DERECHO MÓVIL: Buscador idéntico a la imagen de referencia -->
+    <aside id="drawer-buscador-movil" class="drawer-panel drawer-panel-derecho vista-oculta">
+      <div class="drawer-buscador-barra">
+        <div class="caja-search-estilo-ref">
+          <img src="/fondos/lupa.png" alt="Buscar" class="icono-lupa-ref" />
+          <input 
+            type="search" 
+            id="input-buscador-drawer" 
+            placeholder="BUSCAR..." 
+            autocomplete="off"
+          />
+        </div>
+        <button id="btn-cerrar-buscador-movil" class="btn-cerrar-circular" title="Cerrar">✕</button>
+      </div>
+
+      <div class="cuerpo-buscador-drawer">
+        <div class="etiqueta-populares">
+          <span>SUGERENCIAS / SECCIONES</span>
+          <span class="icono-flecha-ref">↗</span>
+        </div>
+        <div id="resultados-drawer-movil" class="contenedor-resultados-drawer">
+          <!-- Búsquedas rápidas o resultados en vivo -->
+        </div>
+      </div>
+    </aside>
 
     <!-- 3. DOMINIO EDITORIAL: 3 Círculos Anónimos Flotantes -->
     <nav id="nav-nodos-home" class="nav-nodos-home vista-oculta" aria-label="Navegación del Tríptico">

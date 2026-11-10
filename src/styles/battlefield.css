@@ -1,4 +1,9 @@
 /* Lienzo WebGL al fondo de todo */
+/* =========================================================
+   ATMÓSFERA Y LIENZO CON REVELACIÓN TEATRAL
+   Nacen invisibles y florecen en 1.2 segundos al estar listos
+   ========================================================= */
+
 #canvas-inmersivo {
   position: fixed;
   inset: 0;
@@ -6,9 +11,11 @@
   height: 100vh;
   z-index: -2;
   pointer-events: none;
+  opacity: 0; /* Oculto al arrancar */
+  transition: opacity 1.2s ease-out;
+  will-change: opacity;
 }
 
-/* Escenario Artístico */
 #escenario-artistico {
   position: fixed;
   inset: 0;
@@ -20,6 +27,15 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  opacity: 0; /* Oculto al arrancar */
+  transition: opacity 1.2s ease-out;
+  will-change: opacity;
+}
+
+/* ESTADO REVELADO: Cuando todo está listo en GPU y tipografía */
+body.escena-lista #canvas-inmersivo,
+body.escena-lista #escenario-artistico {
+  opacity: 1;
 }
 
 .escenario-viento-activo {

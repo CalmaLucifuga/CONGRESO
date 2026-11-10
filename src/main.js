@@ -1,6 +1,3 @@
-// =========================================================
-// 1. IMPORTACIÓN MODULAR DE ESTILOS (El motor visual)
-// =========================================================
 import "./styles/base.css";
 import "./styles/components.css";
 import "./styles/home.css";
@@ -27,13 +24,30 @@ import {
 import { reproducirCinematica } from "./views/cinematicaView.js";
 
 // =========================================================
-// 3. ARRANQUE DE MOTORES GRÁFICOS Y VISTAS BASE
+// 3. ARRANQUE CON REVELACIÓN TEATRAL
 // =========================================================
-iniciarFondoInmersivo();
+// 1. Capturamos la promesa de carga del fondo WebGL
+const promesaFondo = iniciarFondoInmersivo();
+
+// 2. Arrancamos los demás motores y vistas
 iniciarVientoFondo();
 iniciarScrollEngine();
 inicializarInicio();
 inicializarExplorador();
+
+// 3. Tiempo límite de seguridad (máximo 2.5s) y comprobación de fuentes
+const tiempoLimiteSeguridad = new Promise((resolve) =>
+  setTimeout(resolve, 2500),
+);
+const fuentesListas = document.fonts ? document.fonts.ready : Promise.resolve();
+
+// 4. En cuanto todo está listo en GPU y tipografía, florece la atmósfera
+Promise.race([
+  Promise.all([promesaFondo, fuentesListas]),
+  tiempoLimiteSeguridad,
+]).then(() => {
+  document.body.classList.add("escena-lista");
+});
 
 // =========================================================
 // 4. REGISTRO DE ELEMENTOS Y VISTAS
@@ -397,6 +411,167 @@ if (inputBusquedaCabecera && dropdownResultados) {
   document.addEventListener("click", (e) => {
     if (!e.target.closest(".utilidad-derecha-buscador")) {
       dropdownResultados.classList.add("vista-oculta");
+    }
+  });
+}
+
+// =========================================================
+// INTERACCIÓN MÓVIL: CAJÓN IZQUIERDO Y BUSCADOR DERECHO
+// =========================================================
+const btnHamburguesa = document.querySelector("#btn-hamburguesa-movil");
+const btnLupaMovil = document.querySelector("#btn-lupa-movil");
+const backdropMovil = document.querySelector("#backdrop-movil");
+
+const drawerMenu = document.querySelector("#drawer-menu-movil");
+const btnCerrarMenu = document.querySelector("#btn-cerrar-menu-movil");
+
+const drawerBuscador = document.querySelector("#drawer-buscador-movil");
+const btnCerrarBuscador = document.querySelector("#btn-cerrar-buscador-movil");
+const inputBuscadorDrawer = document.querySelector("#input-buscador-drawer");
+const resultadosDrawer = document.querySelector("#resultados-drawer-movil");
+
+// Botones dentro del cajón izquierdo
+const btnMovilHome = document.querySelector("#btn-movil-home");
+const btnMovilExplorador = document.querySelector("#btn-movil-explorador");
+const btnMovilPizarra = document.querySelector("#btn-movil-pizarra");
+
+function cerrarTodosDrawers() {
+  if (drawerMenu) drawerMenu.classList.add("vista-oculta");
+  if (drawerBuscador) drawerBuscador.classList.add("vista-oculta");
+  if (backdropMovil) backdropMovil.classList.add("vista-oculta");
+}
+
+// 1. Abrir Cajón Izquierdo (Menú con Blur)
+if (btnHamburguesa && drawerMenu && backdropMovil) {
+  btnHamburguesa.addEventListener("click", () => {
+    cerrarTodosDrawers();
+    drawerMenu.classList.remove("vista-oculta");
+    backdropMovil.classList.remove("vista-oculta");
+  });
+}
+
+if (btnCerrarMenu) btnCerrarMenu.addEventListener("click", cerrarTodosDrawers);
+
+// Navegación desde el cajón izquierdo móvil
+if (btnMovilHome) {
+  btnMovilHome.addEventListener("click", () => {
+    cerrarTodosDrawers();
+    navegarA("inicio");
+  });
+}
+
+if (btnMovilExplorador) {
+  btnMovilExplorador.addEventListener("click", () => {
+    cerrarTodosDrawers();
+    navegarA("explorador");
+  });
+}
+
+if (btnMovilPizarra) {
+  btnMovilPizarra.addEventListener("click", () => {
+    cerrarTodosDrawers();
+    navegarA("pizarra");
+  });
+}
+
+// 2. Abrir Cajón Derecho (Buscador estilo referencia)
+if (btnLupaMovil && drawerBuscador && backdropMovil) {
+  btnLupaMovil.addEventListener("click", () => {
+    cerrarTodosDrawers();
+    drawerBuscador.classList.remove("vista-oculta");
+    backdropMovil.classList.remove("vista-oculta");
+    renderizarSugerenciasIniciales();
+    setTimeout(() => {
+      if (inputBuscadorDrawer) inputBuscadorDrawer.focus();
+    }, 150);
+  });
+}
+
+if (btnCerrarBuscador)
+  btnCerrarBuscador.addEventListener("click", cerrarTodosDrawers);
+if (backdropMovil) backdropMovil.addEventListener("click", cerrarTodosDrawers);
+
+// Cargar sugerencias por defecto en el cajón de búsqueda
+function renderizarSugerenciasIniciales() {
+  if (!resultadosDrawer) return;
+  const categoriasUnicas = [
+    ...new Set(datos.map((d) => d.categoria || "General")),
+  ];
+  resultadosDrawer.innerHTML = categoriasUnicas
+    .slice(0, 6)
+    .map(
+      (cat) => `
+    <div class="item-sugerencia-drawer" data-categoria="${cat}">
+      ${cat}
+    </div>
+  `,
+    )
+    .join("");
+
+  // Tocar una categoría abre el explorador filtrado
+  resultadosDrawer
+    .querySelectorAll(".item-sugerencia-drawer")
+    .forEach((item) => {
+      item.addEventListener("click", () => {
+        const cat = item.dataset.categoria;
+        cerrarTodosDrawers();
+        navegarA("explorador");
+        const filtroSelect = document.querySelector("#filtro-categoria");
+        if (filtroSelect) {
+          filtroSelect.value = cat;
+          filtroSelect.dispatchEvent(new Event("change"));
+        }
+      });
+    });
+}
+
+// Búsqueda en vivo dentro del cajón móvil
+if (inputBuscadorDrawer && resultadosDrawer) {
+  inputBuscadorDrawer.addEventListener("input", (e) => {
+    const termino = e.target.value.toLowerCase().trim();
+
+    if (termino.length === 0) {
+      renderizarSugerenciasIniciales();
+      return;
+    }
+
+    const coincidentes = datos.filter((d) => {
+      const tit = (d.titulo || "").toLowerCase();
+      const desc = (d.descripcion || "").toLowerCase();
+      const cat = (d.categoria || "").toLowerCase();
+      return (
+        tit.includes(termino) || desc.includes(termino) || cat.includes(termino)
+      );
+    });
+
+    if (coincidentes.length === 0) {
+      resultadosDrawer.innerHTML = `
+        <div style="padding: 1rem 0; color: #71717a; font-size: 0.85rem;">
+          No se encontraron coincidencias.
+        </div>
+      `;
+    } else {
+      resultadosDrawer.innerHTML = coincidentes
+        .slice(0, 6)
+        .map(
+          (d) => `
+        <div class="item-resultado-rapido" data-enlace="${d.enlace}">
+          <span class="titulo-item-rapido">${d.titulo}</span>
+          <span class="categoria-item-rapido">${d.categoria} · Ver PDF ↗</span>
+        </div>
+      `,
+        )
+        .join("");
+
+      resultadosDrawer
+        .querySelectorAll(".item-resultado-rapido")
+        .forEach((item) => {
+          item.addEventListener("click", () => {
+            const enlace = item.dataset.enlace;
+            if (enlace && enlace !== "#") window.open(enlace, "_blank");
+            cerrarTodosDrawers();
+          });
+        });
     }
   });
 }
