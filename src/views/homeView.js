@@ -35,7 +35,7 @@ export function inicializarInicio() {
         <!-- Distintivo superior -->
         <div class="actualidad-emblema-wrapper">
           <span class="emblema-punto"></span>
-          <span class="subtexto-institucional">GÉNESIS & DESPLAZAMIENTO DEL PODER LEGISLATIVO</span>
+          <span class="subtexto-institucional">HISTORIA DEL CONGRESO</span>
         </div>
 
         <!-- HITO 1: 1983 - 1986 -->
@@ -99,7 +99,7 @@ export function inicializarInicio() {
             ACTUALIDAD
           </h2>
           <div class="indicador-ingreso-actualidad">
-            <span class="texto-ingreso">[ AVANZAR EN EL TIEMPO ]</span>
+            <span class="texto-ingreso">[ HAZ CLICK PARA CONTINUAR ]</span>
             <span class="flecha-ingreso">→</span>
           </div>
         </div>
