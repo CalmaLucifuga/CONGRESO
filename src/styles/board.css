@@ -1,10 +1,13 @@
-/* Estructura general de la Pizarra */
+/* =========================================================
+   PIZARRA DE TRABAJO: DISEÑO MONOCROMÁTICO (B&N)
+   ========================================================= */
+
 .contenedor-pizarra {
   display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 1.5rem;
+  grid-template-columns: 290px 1fr;
+  gap: 1.8rem;
   margin-top: 1rem;
-  min-height: 550px;
+  min-height: 600px;
 }
 
 .contenedor-pizarra.panel-oculto {
@@ -15,20 +18,34 @@
   display: none;
 }
 
-/* Panel Lateral de Documentos */
+/* =========================================================
+   1. PANEL LATERAL: LISTA DE ARCHIVOS DISPONIBLES
+   ========================================================= */
+
 .panel-lateral-pizarra {
   background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 1.25rem;
+  border-radius: 12px;
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
   display: flex;
   flex-direction: column;
 }
 
+.panel-lateral-pizarra h3 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: #18181b;
+  margin-bottom: 0.25rem;
+}
+
 .subtexto-pizarra {
-  font-size: 0.85rem;
-  color: #6b7280;
-  margin-bottom: 1rem;
+  font-family: system-ui, sans-serif;
+  font-size: 0.8rem;
+  color: #71717a;
+  margin-bottom: 1.25rem;
 }
 
 .lista-arrastrables {
@@ -36,17 +53,27 @@
   flex-direction: column;
   gap: 0.75rem;
   overflow-y: auto;
-  max-height: 500px;
+  max-height: 520px;
+  padding-right: 0.25rem;
 }
 
+/* Ficha arrastrable */
 .item-arrastrable {
-  background: #f9fafb;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  padding: 0.75rem;
+  background: #fbfbfb;
+  border: 1px solid #e4e4e7;
+  border-radius: 8px;
+  padding: 0.85rem;
   cursor: grab;
-  transition: transform 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item-arrastrable:hover {
+  border-color: #18181b;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
 .item-arrastrable:active {
@@ -54,29 +81,75 @@
 }
 
 .item-arrastrable.arrastrando {
-  opacity: 0.4;
-  transform: scale(0.95);
+  opacity: 0.35;
+  transform: scale(0.96);
 }
 
-.item-arrastrable h4 {
-  font-size: 0.9rem;
-  color: #1f2937;
-  margin-bottom: 0.25rem;
+.info-arrastrable {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  overflow: hidden;
+  margin-right: 0.5rem;
 }
 
-.item-arrastrable .badge-mini {
-  font-size: 0.7rem;
-  background: #e0e7ff;
-  color: #4338ca;
-  padding: 0.15rem 0.4rem;
-  border-radius: 4px;
+.info-arrastrable h4 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #18181b;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Mesa de Trabajo y Herramientas */
+/* Insignia monocromática pequeña */
+.badge-mini {
+  display: inline-block;
+  align-self: flex-start;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  background: #18181b;        /* Negro carbón */
+  color: #ffffff;             /* Blanco */
+  padding: 0.18rem 0.5rem;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+/* Botón táctil para añadir directo (Móvil y accesibilidad) */
+.btn-toque-anadir {
+  background: #18181b;
+  color: #ffffff;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.btn-toque-anadir:hover {
+  background: #000000;
+  transform: scale(1.08);
+}
+
+/* =========================================================
+   2. ÁREA DE TRABAJO Y BARRA DE HERRAMIENTAS
+   ========================================================= */
+
 .area-trabajo {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.25rem;
 }
 
 .cabecera-area {
@@ -85,6 +158,10 @@
   align-items: center;
   flex-wrap: wrap;
   gap: 0.75rem;
+  background: #ffffff;
+  padding: 0.9rem 1.25rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
 }
 
 .herramientas-mesa {
@@ -94,51 +171,67 @@
   flex-wrap: wrap;
 }
 
+/* Conmutador de Split (Horizontal / Vertical / Grid) */
 .grupo-split {
   display: flex;
-  background: #e2e8f0;
-  padding: 2px;
+  background: #f4f4f5;
+  padding: 3px;
   border-radius: 6px;
+  border: 1px solid #e4e4e7;
   gap: 2px;
 }
 
 .btn-split {
   background: transparent;
   border: none;
-  padding: 0.35rem 0.75rem;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: #475569;
+  padding: 0.4rem 0.85rem;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #71717a;
   cursor: pointer;
   border-radius: 4px;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .btn-split:hover {
-  color: #0f172a;
+  color: #18181b;
 }
 
+/* Estado activo del botón split: Negro sólido puro */
 .btn-split.activo {
-  background: #ffffff;
-  color: #2563eb;
-  font-weight: 600;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  background: #18181b;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .btn-secundario {
   background: transparent;
-  border: 1px solid #d1d5db;
-  padding: 0.4rem 0.8rem;
+  border: 1px solid #d4d4d8;
+  padding: 0.45rem 0.9rem;
   border-radius: 6px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #18181b;
   cursor: pointer;
-  font-size: 0.85rem;
+  transition: all 0.2s ease;
 }
 
 .btn-secundario:hover {
-  background: #f3f4f6;
+  background: #18181b;
+  color: #ffffff;
+  border-color: #18181b;
 }
 
-/* Zona de Suelta (Dropzone) y Split Views */
+/* =========================================================
+   3. ZONA DE SUELTA (DROPZONE)
+   ========================================================= */
+
 .zona-suelta,
 .zona-suelta[data-layout="horizontal"] {
   display: grid;
@@ -146,10 +239,11 @@
   gap: 1.5rem;
   min-height: 600px;
   background: #ffffff;
-  border: 2px dashed #cbd5e1;
+  border: 2px dashed #d4d4d8;
   border-radius: 12px;
-  padding: 1.25rem;
+  padding: 1.5rem;
   align-items: start;
+  transition: all 0.25s ease;
 }
 
 .zona-suelta[data-layout="vertical"] {
@@ -168,49 +262,69 @@
   gap: 1.5rem;
 }
 
+/* Indicador al pasar un archivo por encima (Monocromo neutro) */
 .zona-suelta.dragover-activo {
-  background-color: #eff6ff;
-  border-color: #2563eb;
+  background-color: #fafafa;
+  border-color: #18181b;
   border-style: solid;
 }
 
 .mensaje-zona-vacia {
   grid-column: 1 / -1;
   text-align: center;
-  color: #9ca3af;
+  color: #a1a1aa;
   margin: auto;
   pointer-events: none;
 }
 
 .icono-drop {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   display: block;
   margin-bottom: 0.5rem;
+  opacity: 0.5;
 }
 
-/* Panel de Documento con Visor Integrado */
+.mensaje-zona-vacia p {
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* =========================================================
+   4. VENTANA DE DOCUMENTO CON VISOR INTEGRADO
+   ========================================================= */
+
 .panel-documento {
   background: #ffffff;
-  border: 1px solid #d1d5db;
+  border: none;
   border-radius: 10px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
 .cabecera-panel {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0.75rem 1rem;
-  background: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
+  padding: 0.8rem 1.1rem;
+  background: #fcfcfc;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.info-doc {
+  overflow: hidden;
+  margin-right: 0.5rem;
 }
 
 .info-doc h4 {
-  font-size: 0.95rem;
-  color: #1e293b;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.92rem;
+  font-weight: 800;
+  color: #18181b;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -224,8 +338,8 @@
 }
 
 .btn-accion {
-  background: transparent;
-  border: 1px solid #d1d5db;
+  background: #ffffff;
+  border: 1px solid #e4e4e7;
   border-radius: 4px;
   width: 28px;
   height: 28px;
@@ -233,30 +347,32 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 0.85rem;
-  color: #4b5563;
+  font-size: 0.82rem;
+  color: #27272a;
   text-decoration: none;
+  transition: all 0.2s ease;
 }
 
 .btn-accion:hover {
-  background: #e2e8f0;
-  color: #111827;
+  background: #18181b;
+  color: #ffffff;
+  border-color: #18181b;
 }
 
 .btn-cerrar:hover {
-  background: #fee2e2;
-  color: #ef4444;
-  border-color: #fca5a5;
+  background: #000000;
+  color: #ffffff;
+  border-color: #000000;
 }
 
 .cuerpo-panel {
   position: relative;
-  height: 520px;
+  height: 540px;
   min-height: 350px;
   max-height: 85vh;
   resize: vertical;
   overflow: hidden;
-  background: #525659;
+  background: #27272a; /* Fondo neutro de visor */
 }
 
 .contenedor-visor-pdf,
@@ -267,11 +383,12 @@
 }
 
 .pie-panel {
-  padding: 0.5rem 1rem;
-  background: #f8fafc;
-  border-top: 1px solid #e2e8f0;
-  color: #64748b;
+  padding: 0.5rem 1.1rem;
+  background: #fafafa;
+  border-top: 1px solid #f0f0f0;
+  color: #71717a;
   font-size: 0.75rem;
+  font-family: system-ui, sans-serif;
 }
 
 .panel-documento.panel-minimizado .cuerpo-panel,
@@ -279,12 +396,43 @@
   display: none;
 }
 
+/* =========================================================
+   5. PANEL DE MÉTRICAS (ANÁLISIS CONJUNTO EN NEGRO CARBÓN)
+   ========================================================= */
+
 .panel-metricas {
-  background: #1e293b;
-  color: #ffffff;
-  padding: 1.25rem;
+  background: #120f0d;         /* Negro carbón profundo de archivo */
+  color: #f5f2eb;              /* Blanco marfil */
+  padding: 1.5rem 1.8rem;
   border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
+
+.panel-metricas h4 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f5f2eb;
+  margin-bottom: 0.6rem;
+}
+
+.panel-metricas p {
+  font-size: 0.88rem;
+  line-height: 1.6;
+  color: #c4b5a5;
+}
+
+.panel-metricas strong {
+  color: #f5f2eb;
+  font-weight: 700;
+}
+
+/* =========================================================
+   6. RESPALDOS Y PANTALLA COMPLETA
+   ========================================================= */
 
 .visor-fallback,
 .visor-vacio {
@@ -293,75 +441,42 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  background: #f9fafb;
-  color: #6b7280;
+  background: #ffffff;
+  color: #71717a;
   text-align: center;
   padding: 1.5rem;
 }
 
 .btn-fallback {
   margin-top: 0.75rem;
-  padding: 0.5rem 1rem;
-  background: #2563eb;
+  padding: 0.55rem 1.2rem;
+  background: #18181b;
   color: white;
-  border-radius: 6px;
+  border-radius: 4px;
   text-decoration: none;
-  font-size: 0.85rem;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: background-color 0.2s ease;
+}
+
+.btn-fallback:hover {
+  background: #000000;
 }
 
 :fullscreen {
-  background: #f4f6f8;
+  background: #f7f3ee;
   padding: 1.5rem;
   overflow-y: auto;
 }
 
-/* Adaptación real de tu Pizarra para móviles */
-@media (max-width: 850px) {
-  .contenedor-pizarra {
-    grid-template-columns: 1fr; /* Pasa de 2 columnas a 1 sola */
-    min-height: auto;
-  }
-
-  .panel-lateral-pizarra {
-    max-height: 280px;
-    margin-bottom: 1.5rem;
-  }
-
-  /* Los visores de PDF en móvil se reemplazan por aviso táctil */
-  .cuerpo-panel {
-    height: 380px;
-  }
-}
-
 /* =========================================================
-   ADAPTACIÓN MÓVIL DE LA PIZARRA Y ACCESO TÁCTIL
+   7. ADAPTACIÓN MÓVIL
    ========================================================= */
 
-.item-arrastrable {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.btn-toque-anadir {
-  background: #2563eb;
-  color: white;
-  border: none;
-  width: 28px;
-  height: 28px;
-  border-radius: 6px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  margin-left: 0.5rem;
-}
-
 @media (max-width: 850px) {
-  /* La pizarra pasa de 2 columnas a 1 sola columna vertical */
   .contenedor-pizarra {
     grid-template-columns: 1fr;
     gap: 1.5rem;
@@ -374,45 +489,10 @@
   .zona-suelta,
   .zona-suelta[data-layout="horizontal"],
   .zona-suelta[data-layout="grid"] {
-    grid-template-columns: 1fr; /* Cada documento ocupa el 100% en móvil */
+    grid-template-columns: 1fr;
   }
 
   .cuerpo-panel {
     height: 420px;
   }
-}
-
-/* Tarjeta de visualización en móvil para PDFs */
-.visor-movil-pdf {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  background: #1e293b;
-  color: white;
-  padding: 2rem;
-  text-align: center;
-  gap: 0.75rem;
-}
-
-.icono-doc-movil {
-  font-size: 2.5rem;
-}
-
-.subtexto-doc-movil {
-  font-size: 0.85rem;
-  color: #94a3b8;
-  max-width: 280px;
-}
-
-.btn-abrir-pdf-movil {
-  margin-top: 0.5rem;
-  background: #2563eb;
-  color: white;
-  text-decoration: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 0.9rem;
 }

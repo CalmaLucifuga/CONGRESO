@@ -1,4 +1,7 @@
-/* Barra de filtros del Explorador */
+/* =========================================================
+   EXPLORADOR: BUSCADOR Y FILTROS MONOCROMÁTICOS
+   ========================================================= */
+
 .barra-filtros {
   display: flex;
   gap: 1rem;
@@ -10,180 +13,249 @@
   flex: 1;
   min-width: 260px;
   padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 1rem;
-  background-color: #fff;
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.95rem;
+  background-color: #ffffff;
+  color: #18181b;
   outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Enfoque en negro neutro (adiós al azul) */
 #buscador:focus {
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  border-color: #18181b;
+  box-shadow: 0 0 0 2px rgba(24, 24, 27, 0.15);
 }
 
 #filtro-categoria {
-  padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  background-color: #fff;
-  font-size: 1rem;
+  padding: 0.75rem 1.2rem;
+  border: 1px solid #d4d4d8;
+  border-radius: 6px;
+  background-color: #ffffff;
+  color: #18181b;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
   cursor: pointer;
+  outline: none;
+}
+
+#filtro-categoria:focus {
+  border-color: #18181b;
 }
 
 .contador {
-  font-size: 0.9rem;
-  color: #6b7280;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #71717a;
   margin-bottom: 1.5rem;
 }
 
+/* =========================================================
+   GRILLA Y TARJETAS SIMÉTRICAS DE DOCUMENTOS (EXPLORADOR)
+   ========================================================= */
+
 .grid-datos {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 2rem;
+  align-items: start; /* Permite que la tarjeta en hover crezca sin deformar la fila */
 }
 
-/* Tarjeta estándar (Card.js) */
+/* Tarjeta base simétrica */
 .data-card {
+  width: 100%;
   background: #ffffff;
   border-radius: 12px;
-  border: 1px solid #e5e7eb;
+  border: none !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
   padding: 0;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), 
+              box-shadow 0.3s ease;
+  will-change: transform, box-shadow;
 }
 
 .data-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 16px -2px rgba(0, 0, 0, 0.08);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.12);
 }
+
+/* =========================================================
+   MINIATURAS COMPLETAS: FORMATO LIBRO/A4 SIN RECORTES (3:4)
+   ========================================================= */
+
+.contenedor-thumbnail {
+  width: 100%;
+  aspect-ratio: 3 / 4;          /* Proporción vertical de libro y documento A4 */
+  position: relative;
+  overflow: hidden;
+  background-color: #f4f4f5;    /* Fondo neutro que enmarca portadas claras */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem;             /* Margen sutil para que la portada respire */
+}
+
+/* LA IMAGEN SE MUESTRA COMPLETA DE LARGO AL 100% */
+.img-thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;          /* CERO CORTES: Muestra toda la imagen de arriba a abajo */
+  display: block;
+  filter: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); /* Sutil relieve de libro sobre el fondo */
+  transition: transform 0.4s ease;
+}
+
+.data-card:hover .img-thumbnail {
+  transform: scale(1.02);
+}
+
+/* =========================================================
+   CUERPO Y ALINEACIÓN DE TÍTULOS (ALTURA EXACTA EN ESPEJO)
+   ========================================================= */
 
 .card-cuerpo {
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
-  flex-grow: 1;
+}
+
+.card-cabecera-fija {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
 }
 
 .data-card .badge {
   align-self: flex-start;
-  background: #e0e7ff;
-  color: #4338ca;
-  font-size: 0.75rem;
-  font-weight: 600;
+  background: #18181b;
+  color: #f4f4f5;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
   padding: 0.25rem 0.6rem;
-  border-radius: 20px;
-  margin-bottom: 0.8rem;
+  border-radius: 4px;
   text-transform: uppercase;
 }
 
-.data-card h3 {
-  font-size: 1.25rem;
-  margin-bottom: 0.5rem;
-  color: #1f2937;
+/* RESERVA DE ALTURA: Hace que todas las tarjetas terminen a la misma altura exacta */
+.card-cabecera-fija h3 {
+  font-family: 'Raleway', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #18181b;
+  line-height: 1.4;
+  margin-top: 0.2rem;
+  
+  /* Reserva obligatoria de 2 líneas para igualar tarjetas con títulos cortos y largos */
+  min-height: 2.8em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.data-card p {
-  color: #4b5563;
-  font-size: 0.95rem;
-  line-height: 1.4;
-  margin-bottom: 1rem;
-  flex-grow: 1;
+/* =========================================================
+   CAJÓN DESPLEGABLE EN HOVER (SE MANTIENE LIMPIO)
+   ========================================================= */
+
+.card-detalles-desplegable {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transform: translate3d(0, 8px, 0);
+  transition: max-height 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.35s ease,
+              transform 0.35s ease,
+              margin-top 0.35s ease;
+  will-change: max-height, opacity, transform;
+}
+
+.data-card:hover .card-detalles-desplegable {
+  max-height: 320px;
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+  margin-top: 0.9rem;
+}
+
+.card-descripcion {
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #52525b;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  margin-bottom: 0.9rem;
 }
 
 .data-card .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-bottom: 1.25rem;
+  gap: 0.35rem;
+  margin-bottom: 1.1rem;
 }
 
 .data-card .tag {
-  background: #f3f4f6;
-  color: #4b5563;
-  font-size: 0.75rem;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-}
-
-.data-card a {
-  display: inline-block;
-  text-align: center;
-  background: #2563eb;
-  color: white;
-  text-decoration: none;
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
-  font-weight: 500;
-  font-size: 0.9rem;
-  transition: background-color 0.2s ease;
-}
-
-.data-card a:hover {
-  background: #1d4ed8;
-}
-
-.sin-resultados {
-  grid-column: 1 / -1;
-  text-align: center;
-  padding: 3rem;
-  background: #fff;
-  border-radius: 8px;
-  border: 1px dashed #d1d5db;
-  color: #6b7280;
-}
-
-/* Componente de Miniaturas (Thumbnail.js) */
-.contenedor-thumbnail {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  position: relative;
-  overflow: hidden;
-  background-color: #f1f5f9;
-}
-
-.img-thumbnail {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  transition: transform 0.3s ease;
-}
-
-.data-card:hover .img-thumbnail {
-  transform: scale(1.03);
-}
-
-.thumbnail-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  user-select: none;
-}
-
-.thumbnail-tipo-badge {
-  font-size: 0.75rem;
+  background: #f4f4f5;
+  color: #3f3f46;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.06em;
   padding: 0.2rem 0.5rem;
-  border-radius: 4px;
+  border-radius: 3px;
+  border: 1px solid #e4e4e7;
 }
 
-.tipo-pdf { background: #fef2f2; color: #dc2626; }
-.tipo-pdf .thumbnail-tipo-badge { background: #fee2e2; color: #991b1b; }
+.btn-documento {
+  display: block;
+  text-align: center;
+  background: #18181b;
+  color: #ffffff;
+  text-decoration: none;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 0.65rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
 
-.tipo-video { background: #f5f3ff; color: #7c3aed; }
-.tipo-video .thumbnail-tipo-badge { background: #ede9fe; color: #5b21b6; }
+.btn-documento:hover {
+  background: #000000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
 
-.tipo-enlace { background: #ecfdf5; color: #059669; }
-.tipo-enlace .thumbnail-tipo-badge { background: #d1fae5; color: #065f46; }
+/* =========================================================
+   ADAPTACIÓN MÓVIL
+   ========================================================= */
 
-.tipo-default { background: #f8fafc; color: #64748b; }
-.tipo-default .thumbnail-tipo-badge { background: #e2e8f0; color: #334155; }
+@media (max-width: 850px) {
+  .grid-datos {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  /* En móvil el título no necesita reserva fija si están apiladas */
+  .card-cabecera-fija h3 {
+    min-height: auto;
+  }
+
+  .card-detalles-desplegable {
+    max-height: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    margin-top: 0.9rem !important;
+  }
+}
