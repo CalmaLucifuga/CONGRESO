@@ -33,7 +33,7 @@ export function Card(item) {
             rel="noopener noreferrer" 
             class="btn-documento"
           >
-            ${item.enlace ? "Ver Documento ↗" : "No disponible"}
+            ${item.enlace ? "Ver Documento" : "No disponible"}
           </a>
         </div>
       </div>
