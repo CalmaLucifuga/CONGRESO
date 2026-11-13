@@ -37,5 +37,42 @@
         "salvador"
     ],
     "enlace": "/documentos/Post-transitional Justice  Human Rights Trials in Chile and -- Cath Collins.pdf"
+},
+{
+    "id": 4,
+    "titulo": "Grupos económicos, redes corporativas y think tanks",
+    "categoria": "Otros",
+    "tipo": "enlace",
+    "miniatura": "/thumbnails/grupos-economicos-redes-corporativas-y-think-tanks-el-caso-d.jpg",
+    "descripcion": "El caso del Centro de Estudios Públicos en Chile | Íconos - Revista de Ciencias Sociales",
+    "tags": [
+        "grupos",
+        "económicos",
+        "economicos",
+        "redes",
+        "corporativas",
+        "think",
+        "tanks"
+    ],
+    "enlace": "https://iconos.flacsoandes.edu.ec/index.php/iconos/article/view/5861/4436#toc",
+    "destacado": true
+},
+{
+    "id": 5,
+    "titulo": "¿Por qué nos cuesta cambiar? (2024)",
+    "categoria": "Otros",
+    "tipo": "pdf",
+    "miniatura": "/thumbnails/idh-2024-pdf.jpg",
+    "descripcion": "INFORME SOBRE DESARROLLO HUMANO EN CHILE. Inscripción N° 197500 ISBN: 978-956-6057-42-0.",
+    "tags": [
+        "desarrollo",
+        "chile",
+        "humano",
+        "informe",
+        "cambios",
+        "conducir"
+    ],
+    "enlace": "/documentos/idh_2024_pdf.pdf",
+    "destacado": true
 }
 ]
